@@ -10,7 +10,7 @@ const routes: Routes = [
   },
   {
     path: 'orders',
-    loadChildren: 'orders/orders-routing.module#OrdersRouting'
+    loadChildren: 'app/orders/orders-routing.module#OrdersRoutingModule'
   }
 ];
 
