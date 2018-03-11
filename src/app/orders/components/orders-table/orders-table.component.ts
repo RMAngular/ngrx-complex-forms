@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, EventEmitter, Output } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { of } from 'rxjs/observable/of';
 import { map } from 'rxjs/operators';
@@ -11,8 +11,9 @@ import { Order } from '@state/order/order.model';
 })
 export class OrdersTableComponent implements OnInit {
   displayedColumns = ['id', 'customer', 'total'];
-  selectedOrder: Observable<Order>;
   @Input() orders: Array<Order>;
+  @Input() selectedOrderId: string;
+  @Output() orderClicked = new EventEmitter<Order>();
 
   constructor() { }
 
@@ -25,17 +26,11 @@ export class OrdersTableComponent implements OnInit {
     //   .reduce((prev, current) => prev + current);
   }
 
-  isSelected(order: Order): Observable<boolean> {
-    // verify an order is selected
-    if (this.selectedOrder === undefined) {
-      return of(false);
-    }
-
-    return this.selectedOrder.pipe(map(o => o.id === order.id));
+  isSelected(order: Order): Boolean {
+    return order.id === this.selectedOrderId;
   }
 
   select(order: Order) {
-    // todo: dispatch action to select order
-    this.selectedOrder = of(order);
+    this.orderClicked.emit(order);
   }
 }

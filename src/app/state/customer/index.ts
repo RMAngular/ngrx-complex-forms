@@ -2,7 +2,7 @@ import { createSelector, createFeatureSelector } from '@ngrx/store';
 import * as fromCustomers from './customer.reducer';
 import { State as CustomersState } from './customer.reducer';
 
-export const getCustomersState = createFeatureSelector<CustomersState>('customers');
+export const getCustomersState = createFeatureSelector<CustomersState>('customer');
 
 export const {
   selectAll: getAllCustomers,

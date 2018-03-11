@@ -2,7 +2,7 @@ import { createSelector, createFeatureSelector } from '@ngrx/store';
 import * as fromLineItems from './line-item.reducer';
 import { State as LineItemsState } from './line-item.reducer';
 
-export const getLineItemsState = createFeatureSelector<LineItemsState>('line-items');
+export const getLineItemsState = createFeatureSelector<LineItemsState>('line-item');
 
 export const {
   selectIds: getLineItemIds,

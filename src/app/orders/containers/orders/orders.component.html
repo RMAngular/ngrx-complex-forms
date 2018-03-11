@@ -5,7 +5,7 @@
         <mat-card-title>Orders</mat-card-title>
       </mat-card-header>
       <mat-card-content>
-        <app-orders-table [orders]="orders$ | async"></app-orders-table>
+        <app-orders-table [orders]="orders$ | async" [selectedOrderId]="selectedId$ | async" (orderClicked)="onSelectOrder($event)"></app-orders-table>
       </mat-card-content>
     </mat-card>
   </div>

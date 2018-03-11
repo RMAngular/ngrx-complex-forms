@@ -2,7 +2,7 @@ import { createSelector, createFeatureSelector } from '@ngrx/store';
 import * as fromOrders from './order.reducer';
 import { State as OrdersState } from './order.reducer';
 
-export const getOrdersState = createFeatureSelector<OrdersState>('orders');
+export const getOrdersState = createFeatureSelector<OrdersState>('order');
 
 export const {
   selectAll: getAllOrders,
@@ -11,7 +11,7 @@ export const {
   selectTotal: getTotalOrders
 } = fromOrders.adapter.getSelectors(getOrdersState);
 
-export const getSelectedCustomerId = createSelector(
+export const getSelectedOrderId = createSelector(
   getOrdersState,
   fromOrders.getSelectedId
 );

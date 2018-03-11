@@ -7,7 +7,7 @@ import { AppState } from '@state/app.interfaces';
 
 import { Order } from '@state/order/order.model';
 import * as fromStore from '@state/order';
-import { LoadOrders } from '@state/order/order.actions';
+import { LoadOrders, SelectOrder } from '@state/order/order.actions';
 
 @Component({
   templateUrl: './orders.component.html',
@@ -15,6 +15,7 @@ import { LoadOrders } from '@state/order/order.actions';
 })
 export class OrdersComponent implements OnInit {
   orders$: Observable<Order[]>;
+  selectedId$: Observable<string>;
 
   constructor(private store: Store<AppState>) {
   }
@@ -22,5 +23,10 @@ export class OrdersComponent implements OnInit {
   ngOnInit() {
     this.store.dispatch(new LoadOrders());
     this.orders$ = this.store.pipe(select(fromStore.getAllOrders));
+    this.selectedId$ = this.store.pipe(select(fromStore.getSelectedOrderId));
+  }
+
+  onSelectOrder(order) {
+    this.store.dispatch(new SelectOrder({ order: order }));
   }
 }
