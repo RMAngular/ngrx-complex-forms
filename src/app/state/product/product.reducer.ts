@@ -4,12 +4,16 @@ import { ProductActions, ProductActionTypes } from './product.actions';
 
 export interface State extends EntityState<Product> {
   // additional entities state properties
+  loading: boolean;
+  error: string;
 }
 
 export const adapter: EntityAdapter<Product> = createEntityAdapter<Product>();
 
 export const initialState: State = adapter.getInitialState({
   // additional entity state properties
+  loading: false,
+  error: ''
 });
 
 export function reducer(
@@ -50,7 +54,26 @@ export function reducer(
     }
 
     case ProductActionTypes.LoadProducts: {
-      return adapter.addAll(action.payload.products, state);
+      return {
+        ...adapter.removeAll(state),
+        loading: true,
+        error: ''
+      };
+    }
+
+    case ProductActionTypes.LoadProductsSuccess: {
+      return {
+        ...adapter.addAll(action.payload.products, state),
+        loading: false
+      };
+    }
+
+    case ProductActionTypes.LoadProductsFail: {
+      return {
+        ...state,
+        loading: false,
+        error: 'error loading products'
+      };
     }
 
     case ProductActionTypes.ClearProducts: {

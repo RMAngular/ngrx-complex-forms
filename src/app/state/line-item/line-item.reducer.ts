@@ -4,12 +4,16 @@ import { LineItemActions, LineItemActionTypes } from './line-item.actions';
 
 export interface State extends EntityState<LineItem> {
   // additional entities state properties
+  loading: boolean;
+  error: string;
 }
 
 export const adapter: EntityAdapter<LineItem> = createEntityAdapter<LineItem>();
 
 export const initialState: State = adapter.getInitialState({
   // additional entity state properties
+  loading: false,
+  error: ''
 });
 
 export function reducer(
@@ -50,7 +54,26 @@ export function reducer(
     }
 
     case LineItemActionTypes.LoadLineItems: {
-      return adapter.addAll(action.payload.lineItems, state);
+      return {
+        ...adapter.removeAll(state),
+        loading: true,
+        error: ''
+      };
+    }
+
+    case LineItemActionTypes.LoadLineItemsSuccess: {
+      return {
+        ...adapter.addAll(action.payload.lineItems, state),
+        loading: false
+      };
+    }
+
+    case LineItemActionTypes.LoadLineItemsFail: {
+      return {
+        ...state,
+        loading: false,
+        error: 'error loading line items'
+      };
     }
 
     case LineItemActionTypes.ClearLineItems: {

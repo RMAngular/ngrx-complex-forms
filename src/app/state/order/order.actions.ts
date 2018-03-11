@@ -4,6 +4,8 @@ import { Order } from './order.model';
 
 export enum OrderActionTypes {
   LoadOrders = '[Order] Load Orders',
+  LoadOrdersSuccess = '[Order] Load OrdersSuccess',
+  LoadOrdersFail = '[Order] Load OrdersFail',
   AddOrder = '[Order] Add Order',
   UpsertOrder = '[Order] Upsert Order',
   AddOrders = '[Order] Add Orders',
@@ -17,56 +19,64 @@ export enum OrderActionTypes {
 
 export class LoadOrders implements Action {
   readonly type = OrderActionTypes.LoadOrders;
+}
 
-  constructor(public payload: { orders: Order[] }) {}
+export class LoadOrdersSuccess implements Action {
+  readonly type = OrderActionTypes.LoadOrdersSuccess;
+
+  constructor(public payload: { orders: Order[] }) { }
+}
+
+export class LoadOrdersFail implements Action {
+  readonly type = OrderActionTypes.LoadOrdersFail;
 }
 
 export class AddOrder implements Action {
   readonly type = OrderActionTypes.AddOrder;
 
-  constructor(public payload: { order: Order }) {}
+  constructor(public payload: { order: Order }) { }
 }
 
 export class UpsertOrder implements Action {
   readonly type = OrderActionTypes.UpsertOrder;
 
-  constructor(public payload: { order: Update<Order> }) {}
+  constructor(public payload: { order: Update<Order> }) { }
 }
 
 export class AddOrders implements Action {
   readonly type = OrderActionTypes.AddOrders;
 
-  constructor(public payload: { orders: Order[] }) {}
+  constructor(public payload: { orders: Order[] }) { }
 }
 
 export class UpsertOrders implements Action {
   readonly type = OrderActionTypes.UpsertOrders;
 
-  constructor(public payload: { orders: Update<Order>[] }) {}
+  constructor(public payload: { orders: Update<Order>[] }) { }
 }
 
 export class UpdateOrder implements Action {
   readonly type = OrderActionTypes.UpdateOrder;
 
-  constructor(public payload: { order: Update<Order> }) {}
+  constructor(public payload: { order: Update<Order> }) { }
 }
 
 export class UpdateOrders implements Action {
   readonly type = OrderActionTypes.UpdateOrders;
 
-  constructor(public payload: { orders: Update<Order>[] }) {}
+  constructor(public payload: { orders: Update<Order>[] }) { }
 }
 
 export class DeleteOrder implements Action {
   readonly type = OrderActionTypes.DeleteOrder;
 
-  constructor(public payload: { id: string }) {}
+  constructor(public payload: { id: string }) { }
 }
 
 export class DeleteOrders implements Action {
   readonly type = OrderActionTypes.DeleteOrders;
 
-  constructor(public payload: { ids: string[] }) {}
+  constructor(public payload: { ids: string[] }) { }
 }
 
 export class ClearOrders implements Action {
@@ -74,13 +84,15 @@ export class ClearOrders implements Action {
 }
 
 export type OrderActions =
- LoadOrders
- | AddOrder
- | UpsertOrder
- | AddOrders
- | UpsertOrders
- | UpdateOrder
- | UpdateOrders
- | DeleteOrder
- | DeleteOrders
- | ClearOrders;
+  LoadOrders
+  | LoadOrdersSuccess
+  | LoadOrdersFail
+  | AddOrder
+  | UpsertOrder
+  | AddOrders
+  | UpsertOrders
+  | UpdateOrder
+  | UpdateOrders
+  | DeleteOrder
+  | DeleteOrders
+  | ClearOrders;

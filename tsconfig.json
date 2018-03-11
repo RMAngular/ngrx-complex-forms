@@ -17,7 +17,12 @@
     ],
     "baseUrl": "./src",
     "paths": {
-      "@state/*": ["app/state/*"]
+      "@state/*": [
+        "app/state/*"
+      ],
+      "@core/*": [
+        "app/core/*"
+      ]
     }
   }
 }

@@ -4,7 +4,7 @@ import { Observable } from 'rxjs/Observable';
 import { of } from 'rxjs/observable/of';
 import { map, switchMap } from 'rxjs/operators';
 
-import { Customer } from '../../state/customer/customer.model';
+import { Customer } from '@state/customer/customer.model';
 
 @Injectable()
 export class CustomerService {
@@ -56,6 +56,6 @@ export class CustomerService {
       .put(url, customer)
       .pipe(
         switchMap(() => of(customer))
-      )
+      );
   }
 }

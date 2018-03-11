@@ -4,12 +4,16 @@ import { OrderActions, OrderActionTypes } from './order.actions';
 
 export interface State extends EntityState<Order> {
   // additional entities state properties
+  loading: boolean;
+  error: string;
 }
 
 export const adapter: EntityAdapter<Order> = createEntityAdapter<Order>();
 
 export const initialState: State = adapter.getInitialState({
   // additional entity state properties
+  loading: false,
+  error: ''
 });
 
 export function reducer(
@@ -50,7 +54,26 @@ export function reducer(
     }
 
     case OrderActionTypes.LoadOrders: {
-      return adapter.addAll(action.payload.orders, state);
+      return {
+        ...adapter.removeAll(state),
+        loading: true,
+        error: ''
+      };
+    }
+
+    case OrderActionTypes.LoadOrdersSuccess: {
+      return {
+        ...adapter.addAll(action.payload.orders, state),
+        loading: false
+      };
+    }
+
+    case OrderActionTypes.LoadOrdersFail: {
+      return {
+        ...state,
+        loading: false,
+        error: 'error loading orders'
+      };
     }
 
     case OrderActionTypes.ClearOrders: {

@@ -4,12 +4,16 @@ import { CustomerActions, CustomerActionTypes } from './customer.actions';
 
 export interface State extends EntityState<Customer> {
   // additional entities state properties
+  loading: boolean;
+  error: string;
 }
 
 export const adapter: EntityAdapter<Customer> = createEntityAdapter<Customer>();
 
 export const initialState: State = adapter.getInitialState({
   // additional entity state properties
+  loading: false,
+  error: ''
 });
 
 export function reducer(
@@ -50,7 +54,26 @@ export function reducer(
     }
 
     case CustomerActionTypes.LoadCustomers: {
-      return adapter.addAll(action.payload.customers, state);
+      return {
+        ...adapter.removeAll(state),
+        loading: true,
+        error: ''
+      };
+    }
+
+    case CustomerActionTypes.LoadCustomersSuccess: {
+      return {
+        ...adapter.addAll(action.payload.customers, state),
+        loading: false
+      };
+    }
+
+    case CustomerActionTypes.LoadCustomersFail: {
+      return {
+        ...state,
+        loading: false,
+        error: 'error loading customers'
+      };
     }
 
     case CustomerActionTypes.ClearCustomers: {

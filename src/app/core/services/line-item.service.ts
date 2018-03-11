@@ -4,57 +4,59 @@ import { Observable } from 'rxjs/Observable';
 import { of } from 'rxjs/observable/of';
 import { map, switchMap } from 'rxjs/operators';
 
+import { LineItem } from '@state/line-item/line-item.model';
+
 @Injectable()
 export class LineItemService {
-  private customersUrl = 'app/customers';  // URL to web api
+  private lineItemsUrl = 'app/lineItems';  // URL to web api
 
   constructor(private httpClient: HttpClient) { }
 
-  getCustomers(): Observable<Array<Customer>> {
+  getLineItems(): Observable<Array<LineItem>> {
     return this.httpClient
-      .get<Customer[]>(this.customersUrl);
+      .get<LineItem[]>(this.lineItemsUrl);
   }
 
-  getCustomer(id: string): Observable<Customer> {
-    return this.getCustomers()
+  getLineItem(id: string): Observable<LineItem> {
+    return this.getLineItems()
       .pipe(
-        map(customers => customers.find(customer => customer.id === id))
+        map(lineItems => lineItems.find(lineItem => lineItem.id === id))
       );
   }
 
-  save(customer: Customer): Observable<Customer> {
-    if (customer.id) {
-      return this.put(customer);
+  save(lineItem: LineItem): Observable<LineItem> {
+    if (lineItem.id) {
+      return this.put(lineItem);
     }
-    return this.post(customer);
+    return this.post(lineItem);
   }
 
-  delete(customer: Customer): Observable<Customer> {
-    const url = `${this.customersUrl}/${customer.id}`;
+  delete(lineItem: LineItem): Observable<LineItem> {
+    const url = `${this.lineItemsUrl}/${lineItem.id}`;
 
     return this.httpClient.delete<void>(url)
       .pipe(
-        switchMap(() => of(customer))
+        switchMap(() => of(lineItem))
       );
   }
 
-  // Add new Customer
-  private post(customer: Customer): Observable<Customer> {
+  // Add new LineItem
+  private post(lineItem: LineItem): Observable<LineItem> {
     // Only post the name property so the in-memory service will
     //  assign a new ID
     return this.httpClient
-      .post<Customer>(this.customersUrl, customer);
+      .post<LineItem>(this.lineItemsUrl, lineItem);
   }
 
-  // Update existing Customer
-  private put(customer: Customer): Observable<Customer> {
-    const url = `${this.customersUrl}/${customer.id}`;
+  // Update existing LineItem
+  private put(lineItem: LineItem): Observable<LineItem> {
+    const url = `${this.lineItemsUrl}/${lineItem.id}`;
 
     return this.httpClient
-      .put(url, customer)
+      .put(url, lineItem)
       .pipe(
-        switchMap(() => of(customer))
-      )
+        switchMap(() => of(lineItem))
+      );
   }
 
 }

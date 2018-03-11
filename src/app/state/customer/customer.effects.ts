@@ -15,10 +15,10 @@ export class CustomerEffects {
   @Effect()
   load: Observable<Action> = this.actions$.ofType(CustomerActionTypes.LoadCustomers)
     .pipe(
-      switchMap(() => this.service.getHeroes()),
+      switchMap(() => this.service.getCustomers()),
       map(
-        (customers: Customer[]) => new LoadCustomersSuccess(customers),
-        catchError(err => of(new LoadCustomersFail(err)))
+        (customers: Customer[]) => new LoadCustomersSuccess({ customers: customers }),
+        catchError(err => of(new LoadCustomersFail()))
       )
     );
 

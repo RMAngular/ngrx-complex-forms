@@ -24,13 +24,11 @@ export class LoadCustomers implements Action {
 export class LoadCustomersSuccess implements Action {
   readonly type = CustomerActionTypes.LoadCustomersSuccess;
 
-  constructor(public payload: Customer[]) { }
+  constructor(public payload: { customers: Customer[] }) { }
 }
 
 export class LoadCustomersFail implements Action {
   readonly type = CustomerActionTypes.LoadCustomersFail;
-
-  constructor(public error: string) { }
 }
 
 export class AddCustomer implements Action {
@@ -87,6 +85,8 @@ export class ClearCustomers implements Action {
 
 export type CustomerActions =
   LoadCustomers
+  | LoadCustomersSuccess
+  | LoadCustomersFail
   | AddCustomer
   | UpsertCustomer
   | AddCustomers
