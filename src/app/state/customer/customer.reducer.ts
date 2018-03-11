@@ -4,6 +4,7 @@ import { CustomerActions, CustomerActionTypes } from './customer.actions';
 
 export interface State extends EntityState<Customer> {
   // additional entities state properties
+  selectedCustomerId: string;
   loading: boolean;
   error: string;
 }
@@ -12,6 +13,7 @@ export const adapter: EntityAdapter<Customer> = createEntityAdapter<Customer>();
 
 export const initialState: State = adapter.getInitialState({
   // additional entity state properties
+  selectedCustomerId: null,
   loading: false,
   error: ''
 });
@@ -86,9 +88,6 @@ export function reducer(
   }
 }
 
-export const {
-  selectIds,
-  selectEntities,
-  selectAll,
-  selectTotal,
-} = adapter.getSelectors();
+export const getSelectedId = (state: State) => state.selectedCustomerId;
+export const getLoading = (state: State) => state.loading;
+export const getError = (state: State) => state.error;

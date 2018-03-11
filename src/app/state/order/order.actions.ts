@@ -4,8 +4,11 @@ import { Order } from './order.model';
 
 export enum OrderActionTypes {
   LoadOrders = '[Order] Load Orders',
-  LoadOrdersSuccess = '[Order] Load OrdersSuccess',
-  LoadOrdersFail = '[Order] Load OrdersFail',
+  LoadOrdersSuccess = '[Order] Load Orders Success',
+  LoadOrdersFail = '[Order] Load Orders Fail',
+  LoadOrder = '[Order] Load Order',
+  LoadOrderSuccess = '[Order] Load Order Success',
+  LoadOrderFail = '[Order] Load Order Fail',
   AddOrder = '[Order] Add Order',
   UpsertOrder = '[Order] Upsert Order',
   AddOrders = '[Order] Add Orders',
@@ -29,6 +32,20 @@ export class LoadOrdersSuccess implements Action {
 
 export class LoadOrdersFail implements Action {
   readonly type = OrderActionTypes.LoadOrdersFail;
+}
+
+export class LoadOrder implements Action {
+  readonly type = OrderActionTypes.LoadOrder;
+}
+
+export class LoadOrderSuccess implements Action {
+  readonly type = OrderActionTypes.LoadOrderSuccess;
+
+  constructor(public payload: { order: Order }) { }
+}
+
+export class LoadOrderFail implements Action {
+  readonly type = OrderActionTypes.LoadOrderFail;
 }
 
 export class AddOrder implements Action {
@@ -87,6 +104,9 @@ export type OrderActions =
   LoadOrders
   | LoadOrdersSuccess
   | LoadOrdersFail
+  | LoadOrder
+  | LoadOrderSuccess
+  | LoadOrderFail
   | AddOrder
   | UpsertOrder
   | AddOrders

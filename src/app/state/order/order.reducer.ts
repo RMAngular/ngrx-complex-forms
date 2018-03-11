@@ -4,6 +4,7 @@ import { OrderActions, OrderActionTypes } from './order.actions';
 
 export interface State extends EntityState<Order> {
   // additional entities state properties
+  selectedOrderId: string;
   loading: boolean;
   error: string;
 }
@@ -12,6 +13,7 @@ export const adapter: EntityAdapter<Order> = createEntityAdapter<Order>();
 
 export const initialState: State = adapter.getInitialState({
   // additional entity state properties
+  selectedOrderId: null,
   loading: false,
   error: ''
 });
@@ -76,6 +78,29 @@ export function reducer(
       };
     }
 
+    case OrderActionTypes.LoadOrder: {
+      return {
+        ...adapter.removeAll(state),
+        loading: true,
+        error: ''
+      };
+    }
+
+    case OrderActionTypes.LoadOrderSuccess: {
+      return {
+        ...adapter.addOne(action.payload.order, state),
+        loading: false
+      };
+    }
+
+    case OrderActionTypes.LoadOrderFail: {
+      return {
+        ...state,
+        loading: false,
+        error: 'error loading order'
+      };
+    }
+
     case OrderActionTypes.ClearOrders: {
       return adapter.removeAll(state);
     }
@@ -86,9 +111,6 @@ export function reducer(
   }
 }
 
-export const {
-  selectIds,
-  selectEntities,
-  selectAll,
-  selectTotal,
-} = adapter.getSelectors();
+export const getSelectedId = (state: State) => state.selectedOrderId;
+export const getLoading = (state: State) => state.loading;
+export const getError = (state: State) => state.error;

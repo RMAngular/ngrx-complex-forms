@@ -4,6 +4,7 @@ import { LineItemActions, LineItemActionTypes } from './line-item.actions';
 
 export interface State extends EntityState<LineItem> {
   // additional entities state properties
+  selectedLineItemId: string;
   loading: boolean;
   error: string;
 }
@@ -12,6 +13,7 @@ export const adapter: EntityAdapter<LineItem> = createEntityAdapter<LineItem>();
 
 export const initialState: State = adapter.getInitialState({
   // additional entity state properties
+  selectedLineItemId: null,
   loading: false,
   error: ''
 });
@@ -86,9 +88,6 @@ export function reducer(
   }
 }
 
-export const {
-  selectIds,
-  selectEntities,
-  selectAll,
-  selectTotal,
-} = adapter.getSelectors();
+export const getSelectedId = (state: State) => state.selectedLineItemId;
+export const getLoading = (state: State) => state.loading;
+export const getError = (state: State) => state.error;
