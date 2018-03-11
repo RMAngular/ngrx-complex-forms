@@ -1,0 +1,13 @@
+<div fxLayout="row" fxLayoutAlign="center stretch" class="order-container">
+  <div fxFlex.xs="90%" fxFlex.sm="80%" fxFlex.md="70%" fxFlex.lg="65%" fxFlex.xl="60%">
+    <mat-card *ngIf="order | async as o">
+      <mat-card-header>
+        <mat-card-title>Order: {{o.id}}</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <app-order-detail [order]="o"></app-order-detail>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>
+  

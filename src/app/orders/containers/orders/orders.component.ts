@@ -1,12 +1,12 @@
-import { Order } from '@state/order/order.model';
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import { of } from 'rxjs/observable/of';
+
 import * as fromStore from '@state/order/order.reducer';
+import { Order } from '@state/order/order.model';
 
 @Component({
-  selector: 'app-orders',
   templateUrl: './orders.component.html',
   styleUrls: ['./orders.component.scss']
 })

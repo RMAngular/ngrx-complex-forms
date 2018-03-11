@@ -1,0 +1,5 @@
+@import '~@angular/material/theming';
+
+.highlight {
+  background-color: mat-color($mat-grey, 200);
+}
