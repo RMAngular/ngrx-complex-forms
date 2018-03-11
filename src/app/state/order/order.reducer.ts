@@ -80,7 +80,8 @@ export function reducer(
 
     case OrderActionTypes.LoadOrder: {
       return {
-        ...adapter.removeAll(state),
+        ...state,
+        selectedOrderId: action.payload.id,
         loading: true,
         error: ''
       };

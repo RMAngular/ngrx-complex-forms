@@ -1,8 +1,8 @@
 import { Component, Input, OnInit, EventEmitter, Output } from '@angular/core';
+
 import { Observable } from 'rxjs/Observable';
-import { of } from 'rxjs/observable/of';
 import { map } from 'rxjs/operators';
-import { Order } from '@state/order/order.model';
+import { OrderView, Order } from '@state/order/order.model';
 
 @Component({
   selector: 'app-orders-table',
@@ -11,7 +11,7 @@ import { Order } from '@state/order/order.model';
 })
 export class OrdersTableComponent implements OnInit {
   displayedColumns = ['id', 'customer', 'total'];
-  @Input() orders: Array<Order>;
+  @Input() ordersView: Array<OrderView>;
   @Input() selectedOrderId: string;
   @Output() orderClicked = new EventEmitter<Order>();
 

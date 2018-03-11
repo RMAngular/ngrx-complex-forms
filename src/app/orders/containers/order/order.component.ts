@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Store } from '@ngrx/store';
+import { Store, select } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import { filter, map, switchMap, tap, takeWhile } from 'rxjs/operators';
 
@@ -13,30 +13,19 @@ import { Order } from '@state/order/order.model';
   templateUrl: './order.component.html',
   styleUrls: ['./order.component.scss']
 })
-export class OrderComponent implements OnDestroy, OnInit {
-  order: Observable<Order>;
-
-  private alive = true;
+export class OrderComponent implements OnInit {
+  order$: Observable<Order>;
 
   constructor(
     private activatedRoute: ActivatedRoute,
     private store: Store<fromStore.State>
-  ) {}
-
-  ngOnDestroy() {
-    this.alive = false;
-  }
+  ) { }
 
   ngOnInit() {
-    this.order = this.activatedRoute.paramMap.pipe(
+    this.order$ = this.activatedRoute.paramMap.pipe(
       map(params => params.get('id')),
       tap(id => this.store.dispatch(new LoadOrder({ id: id }))),
-      switchMap(() => this.store.select(getSelectedOrder))
+      switchMap(() => this.store.pipe(select(getSelectedOrder)))
     );
-    this.order
-      .pipe(filter(order => !!order), takeWhile(() => this.alive))
-      .subscribe(order =>
-        this.store.dispatch(new SelectOrder({ order: order }))
-      );
   }
 }

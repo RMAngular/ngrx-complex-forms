@@ -1,17 +1,16 @@
-<mat-table #table [dataSource]="orders">
+<mat-table #table [dataSource]="ordersView">
   <ng-container matColumnDef="id">
     <mat-header-cell *matHeaderCellDef>Order ID</mat-header-cell>
-    <mat-cell *matCellDef="let order"> {{order.id}} </mat-cell>
+    <mat-cell *matCellDef="let orderView"> {{orderView.order.id}} </mat-cell>
   </ng-container>
   <ng-container matColumnDef="customer">
     <mat-header-cell *matHeaderCellDef>Customer</mat-header-cell>
-    <!-- <mat-cell *matCellDef="let order"> {{order.customer.firstName}} {{order.customer.lastName}} </mat-cell> -->
-    <mat-cell *matCellDef="let order"> Test McTester </mat-cell>
+    <mat-cell *matCellDef="let orderView">{{orderView.customer?.firstName}} {{orderView.customer?.lastName}} </mat-cell>
   </ng-container>
   <ng-container matColumnDef="total">
     <mat-header-cell *matHeaderCellDef>Total</mat-header-cell>
-    <mat-cell *matCellDef="let order"> {{computeOrderTotal(order)}} </mat-cell>
+    <mat-cell *matCellDef="let orderView"> {{computeOrderTotal(order)}} </mat-cell>
   </ng-container>
   <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-  <mat-row *matRowDef="let order; columns: displayedColumns;" (click)="select(order)"></mat-row>
+  <mat-row *matRowDef="let orderView; columns: displayedColumns;" (click)="select(orderView.order)"></mat-row>
 </mat-table>

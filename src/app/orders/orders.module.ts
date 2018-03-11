@@ -19,4 +19,4 @@ import { OrderComponent } from './containers/order/order.component';
     OrdersTableComponent
   ]
 })
-export class OrdersModule {}
+export class OrdersModule { }

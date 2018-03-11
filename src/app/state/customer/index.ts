@@ -25,3 +25,8 @@ export const getError = createSelector(
   getCustomersState,
   fromCustomers.getError
 );
+
+export const getCustomerById = (id) => createSelector(
+  getCustomersState,
+  (customers) => customers[id]
+);
