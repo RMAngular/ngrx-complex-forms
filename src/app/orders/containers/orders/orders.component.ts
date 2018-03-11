@@ -13,20 +13,15 @@ import { Order } from '@state/order/order.model';
 export class OrdersComponent implements OnInit {
   orders: Observable<Array<Order>>;
 
-  constructor(private store: Store<fromStore.State>) {}
+  constructor(private store: Store<fromStore.State>) { }
 
   ngOnInit() {
     this.orders = of([
       {
         id: '1',
         customerId: '1',
-        lineItems: [
-          {
-            id: '1',
-            productId: '1',
-            quantity: 1,
-            price: 100
-          }
+        lineItemIds: [
+          '1'
         ]
       }
     ]);

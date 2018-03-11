@@ -19,9 +19,9 @@ export class InMemoryDataService {
       { id: '4', name: 'Shaving Cream', price: 4.25 } as Product
     ];
     const orders = [
-      { id: '1', customerId: '1', lineItemIds: ['1', '2', '3', '4'] } as Order
-      { id: '2', customerId: '2', lineItemIds: ['5', '6', '7', '8'] } as Order
-      { id: '3', customerId: '3', lineItemIds: ['9', '10'] } as Order
+      { id: '1', customerId: '1', lineItemIds: ['1', '2', '3', '4'] } as Order,
+      { id: '2', customerId: '2', lineItemIds: ['5', '6', '7', '8'] } as Order,
+      { id: '3', customerId: '3', lineItemIds: ['9', '10'] } as Order,
       { id: '4', customerId: '4', lineItemIds: ['11', '12', '13'] } as Order
     ];
     const lineItems = [

@@ -36,6 +36,8 @@ export class LoadOrdersFail implements Action {
 
 export class LoadOrder implements Action {
   readonly type = OrderActionTypes.LoadOrder;
+
+  constructor(public payload: { id: string }) { }
 }
 
 export class LoadOrderSuccess implements Action {
