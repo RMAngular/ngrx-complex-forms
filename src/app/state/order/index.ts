@@ -16,12 +16,12 @@ export const getSelectedOrderId = createSelector(
   fromOrders.getSelectedId
 );
 
-export const getLoading = createSelector(
-  getOrdersState,
-  fromOrders.getLoading
+export const getSelectedOrder = createSelector(
+  getSelectedOrderId,
+  getOrderEntities,
+  (selectedOrderId, entities) => selectedOrderId && entities[selectedOrderId]
 );
 
-export const getError = createSelector(
-  getOrdersState,
-  fromOrders.getError
-);
+export const getLoading = createSelector(getOrdersState, fromOrders.getLoading);
+
+export const getError = createSelector(getOrdersState, fromOrders.getError);

@@ -13,5 +13,5 @@
     <mat-cell *matCellDef="let order"> {{computeOrderTotal(order)}} </mat-cell>
   </ng-container>
   <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-  <mat-row *matRowDef="let order; columns: displayedColumns;" (click)="select(order)" [ngClass]="{ 'highlight': isSelected(order) | async }"></mat-row>
+  <mat-row *matRowDef="let order; columns: displayedColumns;" (click)="select(order)"></mat-row>
 </mat-table>

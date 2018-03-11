@@ -1,5 +1,6 @@
 @import '~@angular/material/theming';
 
-.highlight {
+mat-row:hover {
   background-color: mat-color($mat-grey, 200);
+  cursor: pointer;
 }
