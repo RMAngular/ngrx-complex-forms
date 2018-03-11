@@ -1,22 +1,9 @@
 import { createSelector, createFeatureSelector } from '@ngrx/store';
-
 import * as fromProducts from './product.reducer';
-
-export interface ProductsState {
-  customers: fromProducts.State;
-}
-
-export const reducers = {
-  customers: fromProducts.reducer
-};
+import { State as ProductsState } from './product.reducer';
 
 export const getProductsState = createFeatureSelector<ProductsState>(
-  'customers'
-);
-
-export const getProductEntitiesState = createSelector(
-  getProductsState,
-  state => state.customers
+  'products'
 );
 
 export const {
@@ -24,19 +11,19 @@ export const {
   selectEntities: getProductEntities,
   selectAll: getAllProducts,
   selectTotal: getTotalProducts
-} = fromProducts.adapter.getSelectors();
+} = fromProducts.adapter.getSelectors(getProductsState);
 
 export const getSelectedCustomerId = createSelector(
-  getProductEntitiesState,
+  getProductsState,
   fromProducts.getSelectedId
 );
 
 export const getLoading = createSelector(
-  getProductEntitiesState,
+  getProductsState,
   fromProducts.getLoading
 );
 
 export const getError = createSelector(
-  getProductEntitiesState,
+  getProductsState,
   fromProducts.getError
 );

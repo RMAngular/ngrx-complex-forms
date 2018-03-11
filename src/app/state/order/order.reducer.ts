@@ -101,6 +101,13 @@ export function reducer(
       };
     }
 
+    case OrderActionTypes.SelectOrder: {
+      return {
+        ...state,
+        selectedOrderId: action.payload.order.id
+      };
+    }
+
     case OrderActionTypes.ClearOrders: {
       return adapter.removeAll(state);
     }

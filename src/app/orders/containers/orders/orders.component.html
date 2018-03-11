@@ -1,12 +1,12 @@
 <div fxLayout="row" fxLayoutAlign="center stretch" class="orders-container">
   <div fxFlex.xs="90%" fxFlex.sm="80%" fxFlex.md="70%" fxFlex.lg="65%" fxFlex.xl="60%">
     <mat-card>
-        <mat-card-header>
-          <mat-card-title>Orders</mat-card-title>
-        </mat-card-header>
-        <mat-card-content>
-          <app-orders-table [orders]="orders | async"></app-orders-table>
-        </mat-card-content>
-      </mat-card>
+      <mat-card-header>
+        <mat-card-title>Orders</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <app-orders-table [orders]="orders$ | async"></app-orders-table>
+      </mat-card-content>
+    </mat-card>
   </div>
 </div>

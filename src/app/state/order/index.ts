@@ -1,42 +1,27 @@
 import { createSelector, createFeatureSelector } from '@ngrx/store';
-
 import * as fromOrders from './order.reducer';
+import { State as OrdersState } from './order.reducer';
 
-export interface OrdersState {
-  customers: fromOrders.State;
-}
-
-export const reducers = {
-  customers: fromOrders.reducer
-};
-
-export const getOrdersState = createFeatureSelector<OrdersState>(
-  'customers'
-);
-
-export const getOrderEntitiesState = createSelector(
-  getOrdersState,
-  state => state.customers
-);
+export const getOrdersState = createFeatureSelector<OrdersState>('orders');
 
 export const {
-  selectIds: getOrderIds,
-  selectEntities: getOrderEntities,
   selectAll: getAllOrders,
+  selectEntities: getOrderEntities,
+  selectIds: getOrderIds,
   selectTotal: getTotalOrders
-} = fromOrders.adapter.getSelectors();
+} = fromOrders.adapter.getSelectors(getOrdersState);
 
 export const getSelectedCustomerId = createSelector(
-  getOrderEntitiesState,
+  getOrdersState,
   fromOrders.getSelectedId
 );
 
 export const getLoading = createSelector(
-  getOrderEntitiesState,
+  getOrdersState,
   fromOrders.getLoading
 );
 
 export const getError = createSelector(
-  getOrderEntitiesState,
+  getOrdersState,
   fromOrders.getError
 );

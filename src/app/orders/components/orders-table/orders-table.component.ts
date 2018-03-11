@@ -18,11 +18,12 @@ export class OrdersTableComponent implements OnInit {
 
   ngOnInit() { }
 
-  // computeOrderTotal(order: Order): number {
-  //   return order.lineItems
-  //     .map(lineItem => lineItem.price)
-  //     .reduce((prev, current) => prev + current);
-  // }
+  computeOrderTotal(order: Order): number {
+    return 0;
+    // return order.lineItems
+    //   .map(lineItem => lineItem.price)
+    //   .reduce((prev, current) => prev + current);
+  }
 
   isSelected(order: Order): Observable<boolean> {
     // verify an order is selected

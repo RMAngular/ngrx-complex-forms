@@ -10,6 +10,7 @@ export enum OrderActionTypes {
   LoadOrderSuccess = '[Order] Load Order Success',
   LoadOrderFail = '[Order] Load Order Fail',
   AddOrder = '[Order] Add Order',
+  SelectOrder = '[Order] Select Order',
   UpsertOrder = '[Order] Upsert Order',
   AddOrders = '[Order] Add Orders',
   UpsertOrders = '[Order] Upsert Orders',
@@ -48,6 +49,12 @@ export class LoadOrderSuccess implements Action {
 
 export class LoadOrderFail implements Action {
   readonly type = OrderActionTypes.LoadOrderFail;
+}
+
+export class SelectOrder implements Action {
+  readonly type = OrderActionTypes.SelectOrder;
+
+  constructor(public payload: { order: Order }) { }
 }
 
 export class AddOrder implements Action {
@@ -109,6 +116,7 @@ export type OrderActions =
   | LoadOrder
   | LoadOrderSuccess
   | LoadOrderFail
+  | SelectOrder
   | AddOrder
   | UpsertOrder
   | AddOrders
