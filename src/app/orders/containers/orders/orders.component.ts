@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
-import * as fromStore from '../state/order/order.reducer';
+import * as fromStore from '../../../state/order/order.reducer';
 
 @Component({
   selector: 'app-orders',
