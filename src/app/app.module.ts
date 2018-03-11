@@ -9,7 +9,6 @@ import { AppComponent } from './app.component';
 import { InMemoryDataService } from './core/in-memory-data.service';
 import { StateModule } from './state/state.module';
 import { CoreModule } from './core/core.module';
-import { OrdersComponent } from './orders/orders.component';
 
 @NgModule({
   imports: [
@@ -21,11 +20,8 @@ import { OrdersComponent } from './orders/orders.component';
     CoreModule.forRoot(),
     InMemoryWebApiModule.forRoot(InMemoryDataService, { delay: 600 })
   ],
-  declarations: [
-    AppComponent,
-    OrdersComponent
-  ],
+  declarations: [AppComponent],
   providers: [],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {}
