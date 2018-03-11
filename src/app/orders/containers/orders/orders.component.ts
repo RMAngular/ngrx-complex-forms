@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
-import * as fromStore from '../state/order/order.reducer';
+import * as fromStore from '@state/order/order.reducer';
 
 @Component({
   selector: 'app-orders',
@@ -8,10 +8,7 @@ import * as fromStore from '../state/order/order.reducer';
   styleUrls: ['./orders.component.css']
 })
 export class OrdersComponent implements OnInit {
+  constructor(private store: Store<fromStore.State>) {}
 
-  constructor(private store: Store<fromStore.State>) { }
-
-  ngOnInit() {
-  }
-
+  ngOnInit() {}
 }
