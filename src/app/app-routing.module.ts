@@ -1,6 +1,7 @@
-import { OrdersRoutingModule } from './orders/orders-routing.module';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+
+import { OrdersRoutingModule } from './orders/orders-routing.module';
 
 const routes: Routes = [
   {

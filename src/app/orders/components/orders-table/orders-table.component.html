@@ -1,0 +1,17 @@
+<mat-table #table [dataSource]="orders">
+  <ng-container matColumnDef="id">
+    <mat-header-cell *matHeaderCellDef>Order ID</mat-header-cell>
+    <mat-cell *matCellDef="let order"> {{order.id}} </mat-cell>
+  </ng-container>
+  <ng-container matColumnDef="customer">
+    <mat-header-cell *matHeaderCellDef>Customer</mat-header-cell>
+    <!-- <mat-cell *matCellDef="let order"> {{order.customer.firstName}} {{order.customer.lastName}} </mat-cell> -->
+    <mat-cell *matCellDef="let order"> Test McTester </mat-cell>
+  </ng-container>
+  <ng-container matColumnDef="total">
+    <mat-header-cell *matHeaderCellDef>Total</mat-header-cell>
+    <mat-cell *matCellDef="let order"> {{computeOrderTotal(order)}} </mat-cell>
+  </ng-container>
+  <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+  <mat-row *matRowDef="let order; columns: displayedColumns;" (click)="select(order)" [ngClass]="{ 'highlight': isSelected(order) | async }"></mat-row>
+</mat-table>
