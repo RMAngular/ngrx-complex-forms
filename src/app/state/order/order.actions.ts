@@ -3,6 +3,7 @@ import { Update } from '@ngrx/entity';
 import { Order } from './order.model';
 
 export enum OrderActionTypes {
+  LoadOrdersView = '[Order] Load Orders View',
   LoadOrders = '[Order] Load Orders',
   LoadOrdersSuccess = '[Order] Load Orders Success',
   LoadOrdersFail = '[Order] Load Orders Fail',
@@ -19,6 +20,10 @@ export enum OrderActionTypes {
   DeleteOrder = '[Order] Delete Order',
   DeleteOrders = '[Order] Delete Orders',
   ClearOrders = '[Order] Clear Orders'
+}
+
+export class LoadOrdersView implements Action {
+  readonly type = OrderActionTypes.LoadOrdersView;
 }
 
 export class LoadOrders implements Action {

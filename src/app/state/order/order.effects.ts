@@ -2,15 +2,28 @@ import { Injectable } from '@angular/core';
 import { Actions, Effect } from '@ngrx/effects';
 import { Action } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
-import { map, switchMap, catchError } from 'rxjs/operators';
+import { map, switchMap, catchError, mergeMap } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
 
 import { Order } from './order.model';
-import { OrderActionTypes, LoadOrdersSuccess, LoadOrdersFail, LoadOrder, LoadOrderSuccess, LoadOrderFail } from './order.actions';
+import { OrderActionTypes, LoadOrdersSuccess, LoadOrdersFail, LoadOrder, LoadOrderSuccess, LoadOrderFail, LoadOrders } from './order.actions';
 import { OrderService } from '../../core/services/order.service';
+import { LoadCustomers } from '@state/customer/customer.actions';
+import { LoadProducts } from '@state/product/product.actions';
+import { LoadLineItems } from '@state/line-item/line-item.actions';
 
 @Injectable()
 export class OrderEffects {
+
+  @Effect()
+  loadOrdersView = this.actions$.ofType(OrderActionTypes.LoadOrdersView)
+    .pipe(
+      mergeMap(add => [
+        new LoadOrders(),
+        new LoadCustomers(),
+        new LoadProducts(),
+        new LoadLineItems()
+      ]));
 
   @Effect()
   load: Observable<Action> = this.actions$.ofType(OrderActionTypes.LoadOrders)

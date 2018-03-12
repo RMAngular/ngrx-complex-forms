@@ -9,7 +9,7 @@ import { AppState } from '@state/app.interfaces';
 import { Order, OrderView } from '@state/order/order.model';
 import * as fromStore from '@state/order';
 import * as fromCustomerStore from '@state/customer';
-import { LoadOrders, SelectOrder } from '@state/order/order.actions';
+import { LoadOrders, SelectOrder, LoadOrdersView } from '@state/order/order.actions';
 import { Router } from '@angular/router';
 import { Customer } from '@state/customer/customer.model';
 import { LoadCustomers } from '@state/customer/customer.actions';
@@ -26,8 +26,7 @@ export class OrdersComponent implements OnInit {
   constructor(private router: Router, private store: Store<AppState>) { }
 
   ngOnInit() {
-    this.store.dispatch(new LoadOrders());
-    this.store.dispatch(new LoadCustomers());
+    this.store.dispatch(new LoadOrdersView());
 
     const orders$ = this.store.pipe(select(fromStore.getAllOrders));
     const customers$ = this.store.pipe(select(fromCustomerStore.getCustomerEntities));
