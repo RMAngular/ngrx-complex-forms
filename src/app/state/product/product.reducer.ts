@@ -78,6 +78,29 @@ export function reducer(
       };
     }
 
+    case ProductActionTypes.LoadProduct: {
+      return {
+        ...state,
+        loading: true,
+        error: ''
+      };
+    }
+
+    case ProductActionTypes.LoadProductSuccess: {
+      return {
+        ...adapter.addOne(action.payload.product, state),
+        loading: false
+      };
+    }
+
+    case ProductActionTypes.LoadProductFail: {
+      return {
+        ...state,
+        loading: false,
+        error: 'error loading product'
+      };
+    }
+
     case ProductActionTypes.ClearProducts: {
       return adapter.removeAll(state);
     }
