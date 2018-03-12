@@ -1,3 +1,14 @@
-<p>
-  product-detail works!
-</p>
+<div fxLayout="column">
+  <div fxLayout="row" fxLayoutAlign="start stretch">
+    <span fxFlex="100px">Product ID</span>
+    <span fxFlex>{{product?.id}}</span>
+  </div>
+  <div fxLayout="row" fxLayoutAlign="start stretch">
+    <span fxFlex="100px">Name</span>
+    <span fxFlex>{{product?.name}}</span>
+  </div>
+  <div fxLayout="row" fxLayoutAlign="start stretch">
+    <span fxFlex="100px">Price</span>
+    <span fxFlex>{{product?.price | currency}}</span>
+  </div>
+</div>

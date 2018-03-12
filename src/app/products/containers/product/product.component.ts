@@ -1,16 +1,15 @@
+import { DeleteProduct } from './../../../state/product/product.actions';
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 
 import { Store, select } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
-import { of } from 'rxjs/observable/of';
-import { filter, map, switchMap, tap, takeWhile } from 'rxjs/operators';
-
+import { map, switchMap, tap } from 'rxjs/operators';
 
 import { AppState } from '@state/app.interfaces';
 import * as fromStore from '@state/product';
 import { Product } from '@state/product/product.model';
-import { LoadProduct } from '@state/product/product.actions';
+import { LoadProduct, SelectProduct } from '@state/product/product.actions';
 
 @Component({
   selector: 'app-product',
@@ -20,18 +19,28 @@ import { LoadProduct } from '@state/product/product.actions';
 export class ProductComponent implements OnInit {
   product$: Observable<Product>;
 
-  constructor(private router: Router,
+  constructor(
+    private router: Router,
     private store: Store<AppState>,
-    private activatedRoute: ActivatedRoute) { }
+    private activatedRoute: ActivatedRoute
+  ) {}
 
   ngOnInit() {
     this.product$ = this.activatedRoute.paramMap.pipe(
       map(params => params.get('id')),
       tap(id => this.store.dispatch(new LoadProduct({ id: id }))),
+      tap(() => this.store.pipe(select(fromStore.getAllProducts))),
       switchMap(() => this.store.pipe(select(fromStore.getSelectedProduct)))
     );
-
-    const products$ = this.store.pipe(select(fromStore.getAllProducts));
   }
 
+  delete(product: Product) {
+    // todo add a confirmation window using ngrx
+    this.store.dispatch(new DeleteProduct({ id: product.id }));
+    this.router.navigate(['products']);
+  }
+
+  edit(product: Product) {
+    this.router.navigate(['products', product.id, 'edit']);
+  }
 }

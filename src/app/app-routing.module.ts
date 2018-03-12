@@ -12,6 +12,10 @@ const routes: Routes = [
   {
     path: 'orders',
     loadChildren: 'app/orders/orders-routing.module#OrdersRoutingModule'
+  },
+  {
+    path: 'products',
+    loadChildren: 'app/products/products-routing.module#ProductsRoutingModule'
   }
 ];
 

@@ -9,6 +9,7 @@ export enum ProductActionTypes {
   LoadProduct = '[Product] Load Product',
   LoadProductSuccess = '[Product] Load Product Success',
   LoadProductFail = '[Product] Load Product Fail',
+  SelectProduct = '[Product] Select product',
   AddProduct = '[Product] Add Product',
   UpsertProduct = '[Product] Upsert Product',
   AddProducts = '[Product] Add Products',
@@ -27,7 +28,7 @@ export class LoadProducts implements Action {
 export class LoadProductsSuccess implements Action {
   readonly type = ProductActionTypes.LoadProductsSuccess;
 
-  constructor(public payload: { products: Product[] }) { }
+  constructor(public payload: { products: Product[] }) {}
 }
 
 export class LoadProductsFail implements Action {
@@ -37,65 +38,71 @@ export class LoadProductsFail implements Action {
 export class LoadProduct implements Action {
   readonly type = ProductActionTypes.LoadProduct;
 
-  constructor(public payload: { id: string }) { }
+  constructor(public payload: { id: string }) {}
 }
 
 export class LoadProductSuccess implements Action {
   readonly type = ProductActionTypes.LoadProductSuccess;
 
-  constructor(public payload: { product: Product }) { }
+  constructor(public payload: { product: Product }) {}
 }
 
 export class LoadProductFail implements Action {
   readonly type = ProductActionTypes.LoadProductFail;
 }
 
+export class SelectProduct implements Action {
+  readonly type = ProductActionTypes.SelectProduct;
+
+  constructor(public payload: { product: Product }) {}
+}
+
 export class AddProduct implements Action {
   readonly type = ProductActionTypes.AddProduct;
 
-  constructor(public payload: { product: Product }) { }
+  constructor(public payload: { product: Product }) {}
 }
 
 export class UpsertProduct implements Action {
   readonly type = ProductActionTypes.UpsertProduct;
 
-  constructor(public payload: { product: Update<Product> }) { }
+  constructor(public payload: { product: Update<Product> }) {}
 }
 
 export class AddProducts implements Action {
   readonly type = ProductActionTypes.AddProducts;
 
-  constructor(public payload: { products: Product[] }) { }
+  constructor(public payload: { products: Product[] }) {}
 }
 
 export class UpsertProducts implements Action {
   readonly type = ProductActionTypes.UpsertProducts;
 
-  constructor(public payload: { products: Update<Product>[] }) { }
+  constructor(public payload: { products: Update<Product>[] }) {}
 }
 
 export class UpdateProduct implements Action {
   readonly type = ProductActionTypes.UpdateProduct;
 
-  constructor(public payload: { product: Update<Product> }) { }
+  constructor(public payload: { product: Update<Product> }) {}
 }
 
 export class UpdateProducts implements Action {
   readonly type = ProductActionTypes.UpdateProducts;
 
-  constructor(public payload: { products: Update<Product>[] }) { }
+  constructor(public payload: { products: Update<Product>[] }) {}
 }
 
 export class DeleteProduct implements Action {
   readonly type = ProductActionTypes.DeleteProduct;
 
-  constructor(public payload: { id: string }) { }
+  constructor(public payload: { id: string }) {}
 }
 
 export class DeleteProducts implements Action {
   readonly type = ProductActionTypes.DeleteProducts;
 
-  constructor(public payload: { ids: string[] }) { }
+  constructor(public payload: { ids: string[] }) {}
 }
 
 export class ClearProducts implements Action {
@@ -103,12 +110,13 @@ export class ClearProducts implements Action {
 }
 
 export type ProductActions =
-  LoadProducts
+  | LoadProducts
   | LoadProductsSuccess
   | LoadProductsFail
   | LoadProduct
   | LoadProductSuccess
   | LoadProductFail
+  | SelectProduct
   | AddProduct
   | UpsertProduct
   | AddProducts

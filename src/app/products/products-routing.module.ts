@@ -11,6 +11,10 @@ const routes: Routes = [
     component: ProductsComponent
   },
   {
+    path: ':id/edit',
+    component: ProductComponent
+  },
+  {
     path: ':id',
     component: ProductComponent
   }
@@ -20,4 +24,4 @@ const routes: Routes = [
   imports: [ProductsModule, RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
-export class ProductsRoutingModule { }
+export class ProductsRoutingModule {}

@@ -1,3 +1,12 @@
-<p>
-  products works!
-</p>
+<div fxLayout="row" fxLayoutAlign="center stretch" class="products-container">
+  <div fxFlex.xs="90%" fxFlex.sm="80%" fxFlex.md="70%" fxFlex.lg="65%" fxFlex.xl="60%">
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>Products</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <app-products-table [products]="products$ | async" (productClicked)="onSelectProduct($event)"></app-products-table>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>
