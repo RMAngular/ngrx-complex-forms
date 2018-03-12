@@ -1,5 +1,6 @@
 import { LineItem } from '../line-item/line-item.model';
 import { Customer } from '@state/customer/customer.model';
+import { Product } from '@state/product/product.model';
 
 export interface Order {
   id: string;
@@ -10,4 +11,6 @@ export interface Order {
 export interface OrderView {
   order: Order;
   customer: Customer;
+  lineItems: LineItem[];
+  products: Product[];
 }

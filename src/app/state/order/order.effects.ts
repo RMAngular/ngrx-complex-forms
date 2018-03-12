@@ -6,7 +6,10 @@ import { map, switchMap, catchError, mergeMap } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
 
 import { Order } from './order.model';
-import { OrderActionTypes, LoadOrdersSuccess, LoadOrdersFail, LoadOrder, LoadOrderSuccess, LoadOrderFail, LoadOrders } from './order.actions';
+import {
+  OrderActionTypes, LoadOrdersSuccess, LoadOrdersFail,
+  LoadOrder, LoadOrderSuccess, LoadOrderFail, LoadOrders
+} from './order.actions';
 import { OrderService } from '../../core/services/order.service';
 import { LoadCustomers } from '@state/customer/customer.actions';
 import { LoadProducts } from '@state/product/product.actions';

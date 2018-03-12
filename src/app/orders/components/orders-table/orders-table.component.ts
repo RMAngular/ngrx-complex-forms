@@ -3,6 +3,7 @@ import { Component, Input, OnInit, EventEmitter, Output } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { map } from 'rxjs/operators';
 import { OrderView, Order } from '@state/order/order.model';
+import { Product } from '@state/product/product.model';
 
 @Component({
   selector: 'app-orders-table',
@@ -19,11 +20,17 @@ export class OrdersTableComponent implements OnInit {
 
   ngOnInit() { }
 
-  computeOrderTotal(order: Order): number {
-    return 0;
-    // return order.lineItems
-    //   .map(lineItem => lineItem.price)
-    //   .reduce((prev, current) => prev + current);
+  computeOrderTotal(orderView: OrderView): number {
+    // using the order view, calculate the product price * lineItem qty
+    return orderView.lineItems
+      .map(lineItem => lineItem.quantity)
+      .reduce((prev, current) => prev + current);
+  }
+
+  getProductPrice(orderView: OrderView, id: string) {
+    const p = orderView.products.find((product: Product) => product.id === id);
+
+    return p.price;
   }
 
   isSelected(order: Order): Boolean {

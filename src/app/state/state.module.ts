@@ -10,13 +10,14 @@ import { CustomRouterStateSerializer } from './shared/utils';
 import { CustomerEffects } from './customer/customer.effects';
 import { ProductEffects } from './product/product.effects';
 import { OrderEffects } from './order/order.effects';
+import { LineItemEffects } from './line-item/line-item.effects';
 
 @NgModule({
   imports: [
     CommonModule,
     StoreRouterConnectingModule,
     StoreModule.forRoot(appReducer, { metaReducers: appMetaReducers }),
-    EffectsModule.forRoot([CustomerEffects, ProductEffects, OrderEffects]),
+    EffectsModule.forRoot([CustomerEffects, ProductEffects, OrderEffects, LineItemEffects]),
     !environment.production ? StoreDevtoolsModule.instrument() : []
   ],
   declarations: []
