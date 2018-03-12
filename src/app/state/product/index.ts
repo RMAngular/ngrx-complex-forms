@@ -11,9 +11,15 @@ export const {
   selectTotal: getTotalProducts
 } = fromProducts.adapter.getSelectors(getProductsState);
 
-export const getSelectedCustomerId = createSelector(
+export const getSelectedProductId = createSelector(
   getProductsState,
   fromProducts.getSelectedId
+);
+
+export const getSelectedProduct = createSelector(
+  getSelectedProductId,
+  getProductEntities,
+  (selectedProductId, entities) => selectedProductId && entities[selectedProductId]
 );
 
 export const getLoading = createSelector(

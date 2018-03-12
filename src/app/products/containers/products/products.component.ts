@@ -23,7 +23,7 @@ export class ProductsComponent implements OnInit {
   ngOnInit() {
     this.store.dispatch(new LoadProducts());
 
-    const products$ = this.store.pipe(select(fromStore.getAllProducts)),
+    const products$ = this.store.pipe(select(fromStore.getAllProducts));
   }
 
 }
