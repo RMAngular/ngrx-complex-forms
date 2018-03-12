@@ -9,7 +9,7 @@
   </ng-container>
   <ng-container matColumnDef="total">
     <mat-header-cell *matHeaderCellDef>Total</mat-header-cell>
-    <mat-cell *matCellDef="let orderView"> {{computeOrderTotal(orderView)}} </mat-cell>
+    <mat-cell *matCellDef="let orderView"> {{computeOrderTotal(orderView) | currency}} </mat-cell>
   </ng-container>
   <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
   <mat-row *matRowDef="let orderView; columns: displayedColumns;" (click)="select(orderView.order)"></mat-row>

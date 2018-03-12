@@ -23,7 +23,12 @@ export class OrdersTableComponent implements OnInit {
   computeOrderTotal(orderView: OrderView): number {
     // using the order view, calculate the product price * lineItem qty
     return orderView.lineItems
-      .map(lineItem => lineItem.quantity)
+      .map((lineItem) => {
+        const p = orderView.products.find((product) => product.id === lineItem.productId),
+          price = p.price;
+
+        return lineItem.quantity * price;
+      })
       .reduce((prev, current) => prev + current);
   }
 
