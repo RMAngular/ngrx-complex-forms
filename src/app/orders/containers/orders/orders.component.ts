@@ -18,6 +18,7 @@ import { Customer } from '@state/customer/customer.model';
 import { LoadCustomers } from '@state/customer/customer.actions';
 import { combineLatest, filter, withLatestFrom, map } from 'rxjs/operators';
 import { Product } from '@state/product/product.model';
+import { OrdersModule } from '../../orders.module';
 
 @Component({
   templateUrl: './orders.component.html',
@@ -45,24 +46,20 @@ export class OrdersComponent implements OnInit {
       map(([orders, customers, lineItems, products]) => {
         return orders.map((order) => {
           const c: Customer = customers[order.customerId],
-            l: LineItem[] = [],
-            p: Product[] = [];
+            name = c ? c.firstName + ' ' + c.lastName : '';
 
-          // find the line items
+          let total: number = 0;
+
+          // calculate the totals
           order.lineItemIds.forEach((id) => {
-            if (lineItems[id]) {
-              l.push(lineItems[id]);
+            const lineItem = lineItems[id];
+
+            if (lineItem && products[lineItem.productId]) {
+              total += lineItem.quantity * products[lineItem.productId].price;
             }
           });
 
-          // find the products
-          l.forEach((lineItem) => {
-            if (products[lineItem.productId]) {
-              p.push(products[lineItem.productId]);
-            }
-          });
-
-          return { order: order, customer: c, lineItems: l, products: p };
+          return { id: order.id, name: name, total: total };
         });
       })
     );

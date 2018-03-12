@@ -1,15 +1,15 @@
 <mat-table #table [dataSource]="ordersView">
   <ng-container matColumnDef="id">
     <mat-header-cell *matHeaderCellDef>Order ID</mat-header-cell>
-    <mat-cell *matCellDef="let orderView"> {{orderView.order.id}} </mat-cell>
+    <mat-cell *matCellDef="let orderView"> {{orderView.id}} </mat-cell>
   </ng-container>
   <ng-container matColumnDef="customer">
     <mat-header-cell *matHeaderCellDef>Customer</mat-header-cell>
-    <mat-cell *matCellDef="let orderView">{{orderView.customer?.firstName}} {{orderView.customer?.lastName}} </mat-cell>
+    <mat-cell *matCellDef="let orderView">{{orderView.name}} </mat-cell>
   </ng-container>
   <ng-container matColumnDef="total">
     <mat-header-cell *matHeaderCellDef>Total</mat-header-cell>
-    <mat-cell *matCellDef="let orderView"> {{computeOrderTotal(orderView) | currency}} </mat-cell>
+    <mat-cell *matCellDef="let orderView"> {{orderView.total | currency}} </mat-cell>
   </ng-container>
   <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
   <mat-row *matRowDef="let orderView; columns: displayedColumns;" (click)="select(orderView.order)"></mat-row>

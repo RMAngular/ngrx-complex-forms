@@ -20,24 +20,6 @@ export class OrdersTableComponent implements OnInit {
 
   ngOnInit() { }
 
-  computeOrderTotal(orderView: OrderView): number {
-    // using the order view, calculate the product price * lineItem qty
-    return orderView.lineItems
-      .map((lineItem) => {
-        const p = orderView.products.find((product) => product.id === lineItem.productId),
-          price = p.price;
-
-        return lineItem.quantity * price;
-      })
-      .reduce((prev, current) => prev + current);
-  }
-
-  getProductPrice(orderView: OrderView, id: string) {
-    const p = orderView.products.find((product: Product) => product.id === id);
-
-    return p.price;
-  }
-
   isSelected(order: Order): Boolean {
     return order.id === this.selectedOrderId;
   }

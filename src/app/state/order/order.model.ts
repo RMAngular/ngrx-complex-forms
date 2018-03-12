@@ -9,8 +9,7 @@ export interface Order {
 }
 
 export interface OrderView {
-  order: Order;
-  customer: Customer;
-  lineItems: LineItem[];
-  products: Product[];
+  id: string;
+  name: string;
+  total: number;
 }
