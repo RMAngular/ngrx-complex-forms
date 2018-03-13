@@ -6,21 +6,40 @@ import { map, switchMap, catchError } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
 
 import { LineItem } from './line-item.model';
-import { LineItemActionTypes, LoadLineItemsSuccess, LoadLineItemsFail } from './line-item.actions';
-import { LineItemService } from '../../core/services/line-item.service';
+import {
+  LineItemActionTypes,
+  LoadLineItem,
+  LoadLineItemSuccess,
+  LoadLineItemFail,
+  LoadLineItemsSuccess,
+  LoadLineItemsFail
+} from './line-item.actions';
+import { LineItemService } from '@core/services/line-item.service';
 
 @Injectable()
 export class LineItemEffects {
   @Effect()
-  load: Observable<Action> = this.actions$.ofType(LineItemActionTypes.LoadLineItems)
+  load: Observable<Action> = this.actions$
+    .ofType(LineItemActionTypes.LoadLineItems)
     .pipe(
       switchMap(() => this.service.getLineItems()),
       map(
-        (lineItems: LineItem[]) => new LoadLineItemsSuccess({ lineItems: lineItems }),
+        (lineItems: LineItem[]) =>
+          new LoadLineItemsSuccess({ lineItems: lineItems }),
         catchError(err => of(new LoadLineItemsFail()))
       )
     );
 
-  constructor(private actions$: Actions,
-    private service: LineItemService) { }
+  @Effect()
+  loadById: Observable<Action> = this.actions$
+    .ofType<LoadLineItem>(LineItemActionTypes.LoadLineItem)
+    .pipe(
+      switchMap(action => this.service.getLineItem(action.payload.id)),
+      map(
+        (lineItem: LineItem) => new LoadLineItemSuccess({ lineItem: lineItem }),
+        catchError(err => of(new LoadLineItemFail()))
+      )
+    );
+
+  constructor(private actions$: Actions, private service: LineItemService) {}
 }

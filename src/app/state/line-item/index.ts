@@ -5,7 +5,9 @@ import { State as LineItemsState } from './line-item.reducer';
 import { LineItem } from '@state/line-item/line-item.model';
 import { Order } from '@state/order/order.model';
 
-export const getLineItemsState = createFeatureSelector<LineItemsState>('lineItem');
+export const getLineItemsState = createFeatureSelector<LineItemsState>(
+  'lineItem'
+);
 
 export const {
   selectIds: getLineItemIds,
@@ -30,15 +32,8 @@ export const getError = createSelector(
 );
 
 export const getOrderLineItems = createSelector(
-  getLineItemEntities,
+  getAllLineItems,
   fromOrders.getSelectedOrder,
-  (lineItems, order: Order) => {
-    const val: LineItem[] = [];
-
-    order.lineItemIds.forEach((id) => {
-      val.push(lineItems[id]);
-    });
-
-    return val;
-  }
+  (lineItems, order: Order) =>
+    lineItems.filter(lineItem => order.lineItemIds.indexOf(lineItem.id) !== -1)
 );

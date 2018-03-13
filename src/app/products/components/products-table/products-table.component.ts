@@ -1,4 +1,5 @@
 import { Component, Input, EventEmitter, Output } from '@angular/core';
+
 import { Product } from '@state/product/product.model';
 
 @Component({

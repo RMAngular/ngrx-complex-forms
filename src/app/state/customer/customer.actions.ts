@@ -3,6 +3,9 @@ import { Update } from '@ngrx/entity';
 import { Customer } from './customer.model';
 
 export enum CustomerActionTypes {
+  LoadCustomer = '[Customer] Load Customer',
+  LoadCustomerSuccess = '[Customer] Load Customer Success',
+  LoadCustomerFail = '[Customer] Load Customer Fail',
   LoadCustomers = '[Customer] Load Customers',
   LoadCustomersSuccess = '[Customer] Load Customers Success',
   LoadCustomersFail = '[Customer] Load Customers Fail',
@@ -15,6 +18,22 @@ export enum CustomerActionTypes {
   DeleteCustomer = '[Customer] Delete Customer',
   DeleteCustomers = '[Customer] Delete Customers',
   ClearCustomers = '[Customer] Clear Customers'
+}
+
+export class LoadCustomer implements Action {
+  readonly type = CustomerActionTypes.LoadCustomer;
+
+  constructor(public payload: { id: number }) {}
+}
+
+export class LoadCustomerSuccess implements Action {
+  readonly type = CustomerActionTypes.LoadCustomerSuccess;
+
+  constructor(public payload: { customer: Customer }) {}
+}
+
+export class LoadCustomerFail implements Action {
+  readonly type = CustomerActionTypes.LoadCustomerFail;
 }
 
 export class LoadCustomers implements Action {
@@ -84,6 +103,9 @@ export class ClearCustomers implements Action {
 }
 
 export type CustomerActions =
+  | LoadCustomer
+  | LoadCustomerSuccess
+  | LoadCustomerFail
   | LoadCustomers
   | LoadCustomersSuccess
   | LoadCustomersFail

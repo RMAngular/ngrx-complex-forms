@@ -75,6 +75,29 @@ export function reducer(state = initialState, action: LineItemActions): State {
       };
     }
 
+    case LineItemActionTypes.LoadLineItem: {
+      return {
+        ...state,
+        loading: true,
+        error: ''
+      };
+    }
+
+    case LineItemActionTypes.LoadLineItemSuccess: {
+      return {
+        ...adapter.addOne(action.payload.lineItem, state),
+        loading: false
+      };
+    }
+
+    case LineItemActionTypes.LoadLineItemFail: {
+      return {
+        ...state,
+        loading: false,
+        error: 'error loading line item'
+      };
+    }
+
     case LineItemActionTypes.ClearLineItems: {
       return adapter.removeAll(state);
     }

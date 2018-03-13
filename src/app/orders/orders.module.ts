@@ -20,9 +20,12 @@ import { OrderDetailComponent } from './components/order-detail/order-detail.com
 import { OrderFormComponent } from './components/order-form/order-form.component';
 import { OrdersTableComponent } from './components/orders-table/orders-table.component';
 import { OrderComponent } from './containers/order/order.component';
+import { OrderCustomerComponent } from './components/order-customer/order-customer.component';
+import { OrderLineitemsTableComponent } from './components/order-lineitems-table/order-lineitems-table.component';
 
 @NgModule({
-  imports: [CommonModule,
+  imports: [
+    CommonModule,
     FlexLayoutModule,
     FormsModule,
     MatCardModule,
@@ -33,14 +36,18 @@ import { OrderComponent } from './containers/order/order.component';
     MatFormFieldModule,
     MatOptionModule,
     MatSelectModule,
+    MatTableModule,
     ReactiveFormsModule,
-    RouterModule],
+    RouterModule
+  ],
   declarations: [
     OrderComponent,
     OrdersComponent,
     OrderDetailComponent,
     OrderFormComponent,
-    OrdersTableComponent
+    OrdersTableComponent,
+    OrderCustomerComponent,
+    OrderLineitemsTableComponent
   ]
 })
-export class OrdersModule { }
+export class OrdersModule {}

@@ -75,6 +75,29 @@ export function reducer(state = initialState, action: CustomerActions): State {
       };
     }
 
+    case CustomerActionTypes.LoadCustomer: {
+      return {
+        ...state,
+        loading: true,
+        error: ''
+      };
+    }
+
+    case CustomerActionTypes.LoadCustomerSuccess: {
+      return {
+        ...adapter.addOne(action.payload.customer, state),
+        loading: false
+      };
+    }
+
+    case CustomerActionTypes.LoadCustomerFail: {
+      return {
+        ...state,
+        loading: false,
+        error: 'error loading customer'
+      };
+    }
+
     case CustomerActionTypes.ClearCustomers: {
       return adapter.removeAll(state);
     }

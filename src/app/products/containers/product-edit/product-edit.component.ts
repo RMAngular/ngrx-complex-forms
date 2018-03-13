@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-
 import { Store, select } from '@ngrx/store';
 import { Update } from '@ngrx/entity';
 import { Observable } from 'rxjs/Observable';

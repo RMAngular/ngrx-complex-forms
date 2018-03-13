@@ -1,15 +1,13 @@
-import { SelectProduct } from './../../../state/product/product.actions';
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { Store, select } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import { of } from 'rxjs/observable/of';
 
-import { Router } from '@angular/router';
-
 import { AppState } from '@state/app.interfaces';
 import * as fromStore from '@state/product';
 import { Product } from '@state/product/product.model';
-import { LoadProducts } from '@state/product/product.actions';
+import { LoadProducts, SelectProduct } from '@state/product/product.actions';
 
 @Component({
   templateUrl: './products.component.html',

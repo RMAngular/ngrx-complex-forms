@@ -8,7 +8,6 @@ import {
   SimpleChanges
 } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-
 import { debounceTime, takeWhile, skip } from 'rxjs/operators';
 
 import { Product } from '@state/product/product.model';

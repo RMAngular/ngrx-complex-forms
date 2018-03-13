@@ -3,6 +3,9 @@ import { Update } from '@ngrx/entity';
 import { LineItem } from './line-item.model';
 
 export enum LineItemActionTypes {
+  LoadLineItem = '[LineItem] Load LineItem',
+  LoadLineItemSuccess = '[LineItem] Load LineItem Success',
+  LoadLineItemFail = '[LineItem] Load LineItem Fail',
   LoadLineItems = '[LineItem] Load LineItems',
   LoadLineItemsSuccess = '[LineItem] Load LineItems Success',
   LoadLineItemsFail = '[LineItem] Load LineItems Fail',
@@ -15,6 +18,22 @@ export enum LineItemActionTypes {
   DeleteLineItem = '[LineItem] Delete LineItem',
   DeleteLineItems = '[LineItem] Delete LineItems',
   ClearLineItems = '[LineItem] Clear LineItems'
+}
+
+export class LoadLineItem implements Action {
+  readonly type = LineItemActionTypes.LoadLineItem;
+
+  constructor(public payload: { id: number }) {}
+}
+
+export class LoadLineItemSuccess implements Action {
+  readonly type = LineItemActionTypes.LoadLineItemSuccess;
+
+  constructor(public payload: { lineItem: LineItem }) {}
+}
+
+export class LoadLineItemFail implements Action {
+  readonly type = LineItemActionTypes.LoadLineItemFail;
 }
 
 export class LoadLineItems implements Action {
@@ -84,6 +103,9 @@ export class ClearLineItems implements Action {
 }
 
 export type LineItemActions =
+  | LoadLineItem
+  | LoadLineItemSuccess
+  | LoadLineItemFail
   | LoadLineItems
   | LoadLineItemsSuccess
   | LoadLineItemsFail
