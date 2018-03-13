@@ -15,6 +15,8 @@ export enum ProductActionTypes {
   AddProducts = '[Product] Add Products',
   UpsertProducts = '[Product] Upsert Products',
   UpdateProduct = '[Product] Update Product',
+  UpdateProductFail = '[Product] Update Product Fail',
+  UpdateProductSuccess = '[Product] Update Product Success',
   UpdateProducts = '[Product] Update Products',
   DeleteProduct = '[Product] Delete Product',
   DeleteProducts = '[Product] Delete Products',
@@ -85,6 +87,16 @@ export class UpdateProduct implements Action {
   readonly type = ProductActionTypes.UpdateProduct;
 
   constructor(public payload: { product: Update<Product> }) {}
+}
+
+export class UpdateProductFail implements Action {
+  readonly type = ProductActionTypes.UpdateProductFail;
+}
+
+export class UpdateProductSuccess implements Action {
+  readonly type = ProductActionTypes.UpdateProductSuccess;
+
+  constructor(public payload: { product: Product }) {}
 }
 
 export class UpdateProducts implements Action {

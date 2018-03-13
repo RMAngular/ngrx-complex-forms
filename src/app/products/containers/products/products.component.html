@@ -1,8 +1,15 @@
 <div fxLayout="row" fxLayoutAlign="center stretch" class="products-container">
   <div fxFlex.xs="90%" fxFlex.sm="80%" fxFlex.md="70%" fxFlex.lg="65%" fxFlex.xl="60%">
+    <div class="actions" fxLayout="row" fxLayoutAlign="end center">
+      <button mat-raised-button color="primary" routerLink="add">
+        <mat-icon>add</mat-icon> Add Product
+      </button>
+    </div>
     <mat-card>
       <mat-card-header>
-        <mat-card-title>Products</mat-card-title>
+        <mat-card-title>
+          <h2>Products</h2>
+        </mat-card-title>
       </mat-card-header>
       <mat-card-content>
         <app-products-table [products]="products$ | async" (productClicked)="onSelectProduct($event)"></app-products-table>

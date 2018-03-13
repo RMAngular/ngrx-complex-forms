@@ -37,6 +37,7 @@ export function reducer(state = initialState, action: ProductActions): State {
     }
 
     case ProductActionTypes.UpdateProduct: {
+      debugger;
       return adapter.updateOne(action.payload.product, state);
     }
 

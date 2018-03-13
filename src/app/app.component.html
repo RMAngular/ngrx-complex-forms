@@ -1,4 +1,19 @@
-<mat-toolbar color="primary">
-  <span>NgRx Complex Forms</span>
-</mat-toolbar>
-<router-outlet></router-outlet>
+<mat-drawer-container (backdropClick)="sidenav.close()" fullscreen>
+  <mat-drawer #sidenav (keydown.escape)="sidenav.close()" disableClose>
+    <mat-list>
+      <mat-list-item>
+        <button mat-button routerLink="/orders" routerLinkActive="active" (click)="sidenav.close()">Orders</button>
+      </mat-list-item>
+      <mat-list-item>
+        <button mat-button routerLink="/products" routerLinkActive="active" (click)="sidenav.close()">Products</button>
+      </mat-list-item>
+    </mat-list>
+  </mat-drawer>
+  <mat-drawer-content>
+    <mat-toolbar color="primary">
+      <mat-icon (click)="sidenav.open()" class="menu">menu</mat-icon>
+      <span>NgRx Complex Forms</span>
+    </mat-toolbar>
+    <router-outlet></router-outlet>
+  </mat-drawer-content>
+</mat-drawer-container>

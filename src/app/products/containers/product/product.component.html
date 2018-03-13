@@ -2,7 +2,9 @@
   <div fxFlex.xs="90%" fxFlex.sm="80%" fxFlex.md="70%" fxFlex.lg="65%" fxFlex.xl="60%">
     <mat-card *ngIf="product$ | async as p">
       <mat-card-header>
-        <mat-card-title>Product Details</mat-card-title>
+        <mat-card-title>
+          <h2>Product Details</h2>
+        </mat-card-title>
       </mat-card-header>
       <mat-card-content>
         <app-product-detail [product]="p"></app-product-detail>
