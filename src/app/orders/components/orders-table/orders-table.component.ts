@@ -21,11 +21,15 @@ export class OrdersTableComponent implements OnInit {
   ngOnInit() { }
 
   computeOrderTotal(orderView: OrderView): number {
+    if (!orderView.lineItems.length) {
+      return 0;
+    }
+
     // using the order view, calculate the product price * lineItem qty
     return orderView.lineItems
       .map((lineItem) => {
         const p = orderView.products.find((product) => product.id === lineItem.productId),
-          price = p.price;
+          price = p ? p.price : 0;
 
         return lineItem.quantity * price;
       })

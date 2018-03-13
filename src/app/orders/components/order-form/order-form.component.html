@@ -1,11 +1,7 @@
-<form ng-form="">
-  <mat-form-field>
-    <label>{{order.id}}</label>
-  </mat-form-field>
+<form [formGroup]="formGroup">
+  <label>OrderId: {{order.id}}</label>
 
-  <mat-form-field>
-    <label>{{customer.firstName}} {{customer.lastName}}</label>
-  </mat-form-field>
+  <label>{{customer?.firstName}} {{customer?.lastName}}</label>
 
   <div *ngFor="let lineItem of lineItems">
     <mat-select placeholder="Product" [formControl]="productId" required>
@@ -16,8 +12,7 @@
     <mat-form-field>
       <input matInput placeholder="Quantity" [formControl]="productId">
     </mat-form-field>
-    <mat-form-field>
-      <label>{{getTotal()}}</label>
-    </mat-form-field>
+    <label>{{getTotal()}}</label>
   </div>
 </form>
+customer: {{customer | json}} lineItems: {{lineItems | json}} products: {{products | json}}

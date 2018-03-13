@@ -1,7 +1,19 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { MatCardModule, MatTableModule, MatFormFieldModule } from '@angular/material';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+
+import {
+  MatCardModule,
+  MatTableModule,
+  MatButtonModule,
+  MatInputModule,
+  MatIconModule,
+  MatFormFieldModule,
+  MatOptionModule,
+  MatSelectModule
+} from '@angular/material';
 
 import { OrdersComponent } from './containers/orders/orders.component';
 import { OrderDetailComponent } from './components/order-detail/order-detail.component';
@@ -10,7 +22,19 @@ import { OrdersTableComponent } from './components/orders-table/orders-table.com
 import { OrderComponent } from './containers/order/order.component';
 
 @NgModule({
-  imports: [CommonModule, FlexLayoutModule, MatCardModule, MatTableModule, MatFormFieldModule],
+  imports: [CommonModule,
+    FlexLayoutModule,
+    FormsModule,
+    MatCardModule,
+    MatTableModule,
+    MatButtonModule,
+    MatInputModule,
+    MatIconModule,
+    MatFormFieldModule,
+    MatOptionModule,
+    MatSelectModule,
+    ReactiveFormsModule,
+    RouterModule],
   declarations: [
     OrderComponent,
     OrdersComponent,
