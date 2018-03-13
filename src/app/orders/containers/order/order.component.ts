@@ -1,3 +1,4 @@
+import { UpdateOrder } from './../../../state/order/order.actions';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Store, select } from '@ngrx/store';
@@ -48,6 +49,12 @@ export class OrderComponent implements OnDestroy, OnInit {
       switchMap(() => this.store.pipe(select(getSelectedOrder)))
     );
 
+    // get all customers
+    this.store.dispatch(new LoadCustomers());
+    this.customers$ = this.store.pipe(
+      select(fromCustomerStore.getAllCustomers)
+    );
+
     // get customer for order
     this.customer$ = this.order$.pipe(
       skipWhile(order => !order),
@@ -64,18 +71,8 @@ export class OrderComponent implements OnDestroy, OnInit {
       )
     );
 
-    // get all customers
-    this.store.dispatch(new LoadCustomers());
-    this.customers$ = this.store.pipe(
-      select(fromCustomerStore.getAllCustomers)
-    );
-
     // get all line items
-    this.lineItemsExistInStore()
-      .pipe(takeWhile(() => this.alive))
-      .subscribe(exists => {
-        if (!exists) this.store.dispatch(new LoadLineItems());
-      });
+    this.store.dispatch(new LoadLineItems());
     this.lineItems$ = this.store.pipe(
       select(fromLineItemStore.getOrderLineItems)
     );
@@ -91,6 +88,14 @@ export class OrderComponent implements OnDestroy, OnInit {
 
   save() {
     console.log('save!', this.order);
+    this.store.dispatch(
+      new UpdateOrder({
+        order: {
+          id: this.order.id,
+          changes: this.order
+        }
+      })
+    );
   }
 
   private customerExistsInStore(id: number): Observable<boolean> {
@@ -99,13 +104,6 @@ export class OrderComponent implements OnDestroy, OnInit {
       map(
         customers => customers.map(customer => customer.id).indexOf(id) !== -1
       )
-    );
-  }
-
-  private lineItemsExistInStore(): Observable<boolean> {
-    return this.store.pipe(
-      select(fromLineItemStore.getTotalLineItems),
-      map(count => count > 0)
     );
   }
 }

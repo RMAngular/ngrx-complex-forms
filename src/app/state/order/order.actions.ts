@@ -16,6 +16,8 @@ export enum OrderActionTypes {
   AddOrders = '[Order] Add Orders',
   UpsertOrders = '[Order] Upsert Orders',
   UpdateOrder = '[Order] Update Order',
+  UpdateOrderSuccess = '[Order] Update Order Success',
+  UpdateOrderFail = '[Order] Update Order Fail',
   UpdateOrders = '[Order] Update Orders',
   DeleteOrder = '[Order] Delete Order',
   DeleteOrders = '[Order] Delete Orders',
@@ -92,6 +94,16 @@ export class UpdateOrder implements Action {
   constructor(public payload: { order: Update<Order> }) {}
 }
 
+export class UpdateOrderFail implements Action {
+  readonly type = OrderActionTypes.UpdateOrderFail;
+}
+
+export class UpdateOrderSuccess implements Action {
+  readonly type = OrderActionTypes.UpdateOrderSuccess;
+
+  constructor(public payload: { order: Order }) {}
+}
+
 export class UpdateOrders implements Action {
   readonly type = OrderActionTypes.UpdateOrders;
 
@@ -127,6 +139,8 @@ export type OrderActions =
   | AddOrders
   | UpsertOrders
   | UpdateOrder
+  | UpdateOrderSuccess
+  | UpdateOrderFail
   | UpdateOrders
   | DeleteOrder
   | DeleteOrders

@@ -2,7 +2,9 @@ import {
   Component,
   EventEmitter,
   Input,
+  OnChanges,
   Output,
+  SimpleChanges,
   ViewChild
 } from '@angular/core';
 import { FormArray, FormGroup } from '@angular/forms';
@@ -16,7 +18,7 @@ import { Product } from '@state/product/product.model';
   templateUrl: './order-lineitems-table.component.html',
   styleUrls: ['./order-lineitems-table.component.scss']
 })
-export class OrderLineitemsTableComponent {
+export class OrderLineitemsTableComponent implements OnChanges {
   displayedColumns = ['index', 'product', 'quantity', 'total', 'actions'];
   @Input() lineItemsFormArray: FormArray;
   @Input() products: Product[];
@@ -26,6 +28,14 @@ export class OrderLineitemsTableComponent {
   @ViewChild(MatTable) private matTable: MatTable<any>;
 
   constructor() {}
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['lineItemsFormArray']) {
+      const current = changes['lineItemsFormArray'].currentValue;
+      const prev = changes['lineItemsFormArray'].previousValue;
+      debugger;
+    }
+  }
 
   calculateLineItemTotal(lineItem: FormGroup): number {
     // verify lineItem

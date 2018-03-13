@@ -3,6 +3,7 @@
   <app-order-customer [customer]="customer" [customerFormControl]="customerFormControl" [customers]="customers"></app-order-customer>
 
   <h4>Line Items</h4>
+  <pre>{{ lineItems | json }}</pre>
   <app-order-lineitems-table [lineItemsFormArray]="lineItemsFormArray" [products]="products" (addLineItem)="addLineItem()"
     (removeLineItemAt)="removeLineItemAt($event)" formArrayName="lineItems"></app-order-lineitems-table>
 </form>

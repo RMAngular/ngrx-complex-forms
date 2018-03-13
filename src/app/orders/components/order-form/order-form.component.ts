@@ -4,7 +4,8 @@ import {
   Input,
   OnChanges,
   OnDestroy,
-  Output
+  Output,
+  SimpleChanges
 } from '@angular/core';
 import {
   FormGroup,
@@ -65,10 +66,17 @@ export class OrderFormComponent implements OnChanges, OnDestroy {
     return this.formGroup.get('lineItems') as FormArray;
   }
 
-  ngOnChanges() {
-    if (this.lineItems && this.lineItems.length > 0) {
+  ngOnChanges(changes: SimpleChanges) {
+    if (
+      changes['lineItems'] !== undefined &&
+      changes['lineItems'].currentValue.length > 0
+    ) {
       this.removeLineItems();
       this.lineItems.forEach(lineItem => this.addLineItem(lineItem));
+      debugger;
+    }
+    if (this.order) {
+      this.formGroup.patchValue(this.order);
     }
   }
 
@@ -84,10 +92,6 @@ export class OrderFormComponent implements OnChanges, OnDestroy {
     lineItems.forEach(lineItem => this.addLineItem(lineItem));
   }
 
-  reinit() {
-    this.lineItemsFormArray.controls = clone(this.lineItemsFormArray.controls);
-  }
-
   removeLineItemAt(i: number) {
     this.lineItemsFormArray.removeAt(i);
   }
@@ -99,7 +103,8 @@ export class OrderFormComponent implements OnChanges, OnDestroy {
 
   private buildForm() {
     this.formGroup = this.formBuilder.group({
-      customerId: ['', Validators.required],
+      id: [0, Validators.required],
+      customerId: [0, Validators.required],
       lineItems: this.formBuilder.array([])
     });
 
@@ -109,12 +114,18 @@ export class OrderFormComponent implements OnChanges, OnDestroy {
         if (!this.formGroup.valid) {
           return;
         }
-        this.orderChange.emit(value);
+        const order: Order = {
+          id: this.formGroup.get('id').value,
+          customerId: this.formGroup.get('customerId').value,
+          lineItemIds: value.lineItems.map((lineItem: LineItem) => lineItem.id)
+        };
+        this.orderChange.emit(order);
       });
   }
 
   private initLineItem(lineItem?: LineItem): FormGroup {
     return this.formBuilder.group({
+      id: [lineItem ? lineItem.id : 0],
       productId: [lineItem ? lineItem.productId : 0, Validators.required],
       quantity: [lineItem ? lineItem.quantity : 0, Validators.required]
     });
