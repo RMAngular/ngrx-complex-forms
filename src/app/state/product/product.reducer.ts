@@ -45,7 +45,7 @@ export function reducer(state = initialState, action: ProductActions): State {
     }
 
     case ProductActionTypes.DeleteProduct: {
-      return adapter.removeOne(action.payload.id, state);
+      return adapter.removeOne(action.payload.product.id, state);
     }
 
     case ProductActionTypes.DeleteProducts: {

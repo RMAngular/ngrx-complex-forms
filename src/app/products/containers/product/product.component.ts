@@ -34,7 +34,7 @@ export class ProductComponent implements OnInit {
 
   delete(product: Product) {
     // todo add a confirmation window using ngrx
-    this.store.dispatch(new DeleteProduct({ id: product.id }));
+    this.store.dispatch(new DeleteProduct({ product: product }));
     this.router.navigate(['products']);
   }
 

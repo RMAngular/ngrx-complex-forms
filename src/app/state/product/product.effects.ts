@@ -18,6 +18,9 @@ import {
   AddProduct,
   AddProductFail,
   AddProductSuccess,
+  DeleteProduct,
+  DeleteProductFail,
+  DeleteProductSuccess,
   LoadProductsSuccess,
   LoadProductsFail,
   LoadProduct,
@@ -50,6 +53,17 @@ export class ProductEffects {
   addSuccess: Observable<Action> = this.actions$
     .ofType<AddProductSuccess>(ProductActionTypes.AddProductSuccess)
     .pipe(tap(() => this.router.navigate(['products'])));
+
+  @Effect()
+  delete: Observable<Action> = this.actions$
+    .ofType<DeleteProduct>(ProductActionTypes.DeleteProduct)
+    .pipe(
+      switchMap(action => this.service.delete(action.payload.product)),
+      map(
+        (product: Product) => new DeleteProductSuccess({ product: product }),
+        catchError(err => of(new DeleteProductFail()))
+      )
+    );
 
   @Effect()
   load: Observable<Action> = this.actions$

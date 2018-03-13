@@ -7,7 +7,7 @@
         </mat-card-title>
       </mat-card-header>
       <mat-card-content>
-        <app-product-form (productChange)="onProductChange($event)"></app-product-form>
+        <app-product-form (productChange)="onProductChange($event)" (productValid)="onProductValid($event)"></app-product-form>
       </mat-card-content>
       <mat-card-actions>
         <button mat-button color="secondary" (click)="onSave()">Save</button>

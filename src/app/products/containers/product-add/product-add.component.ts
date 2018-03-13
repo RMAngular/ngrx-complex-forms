@@ -13,6 +13,7 @@ import { Product } from '@state/product/product.model';
 })
 export class ProductAddComponent {
   private product: Product;
+  private valid = false;
 
   constructor(private router: Router, private store: Store<AppState>) {}
 
@@ -24,7 +25,14 @@ export class ProductAddComponent {
     this.product = product;
   }
 
+  onProductValid(valid: boolean) {
+    this.valid = valid;
+  }
+
   onSave() {
+    if (!this.valid) {
+      return;
+    }
     this.store.dispatch(new AddProduct({ product: this.product }));
   }
 }
