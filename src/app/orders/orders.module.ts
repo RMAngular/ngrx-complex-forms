@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { MatCardModule, MatTableModule } from '@angular/material';
+import { MatCardModule, MatTableModule, MatFormFieldModule } from '@angular/material';
 
 import { OrdersComponent } from './containers/orders/orders.component';
 import { OrderDetailComponent } from './components/order-detail/order-detail.component';
@@ -10,7 +10,7 @@ import { OrdersTableComponent } from './components/orders-table/orders-table.com
 import { OrderComponent } from './containers/order/order.component';
 
 @NgModule({
-  imports: [CommonModule, FlexLayoutModule, MatCardModule, MatTableModule],
+  imports: [CommonModule, FlexLayoutModule, MatCardModule, MatTableModule, MatFormFieldModule],
   declarations: [
     OrderComponent,
     OrdersComponent,
