@@ -12,7 +12,11 @@ import * as fromStore from '@state/order';
 import * as fromCustomerStore from '@state/customer';
 import * as fromLineItemStore from '@state/line-item';
 import * as fromProductStore from '@state/product';
-import { LoadOrders, SelectOrder, LoadOrdersView } from '@state/order/order.actions';
+import {
+  LoadOrders,
+  SelectOrder,
+  LoadOrdersView
+} from '@state/order/order.actions';
 import { Router } from '@angular/router';
 import { Customer } from '@state/customer/customer.model';
 import { LoadCustomers } from '@state/customer/customer.actions';
@@ -24,39 +28,46 @@ import { Product } from '@state/product/product.model';
   styleUrls: ['./orders.component.scss']
 })
 export class OrdersComponent implements OnInit {
-  selectedId$: Observable<string>;
+  selectedId$: Observable<number>;
   orders$: Observable<OrderView[]>;
 
-  constructor(private router: Router, private store: Store<AppState>) { }
+  constructor(private router: Router, private store: Store<AppState>) {}
 
   ngOnInit() {
     this.store.dispatch(new LoadOrdersView());
 
     const orders$ = this.store.pipe(select(fromStore.getAllOrders)),
-      customers$ = this.store.pipe(select(fromCustomerStore.getCustomerEntities)),
-      lineItems$ = this.store.pipe(select(fromLineItemStore.getLineItemEntities)),
+      customers$ = this.store.pipe(
+        select(fromCustomerStore.getCustomerEntities)
+      ),
+      lineItems$ = this.store.pipe(
+        select(fromLineItemStore.getLineItemEntities)
+      ),
       products$ = this.store.pipe(select(fromProductStore.getProductEntities));
 
     this.selectedId$ = this.store.pipe(select(fromStore.getSelectedOrderId));
 
     this.orders$ = orders$.pipe(
       combineLatest(customers$, lineItems$, products$),
-      filter(([orders, customers, lineItems, products]) => !!orders && !!customers && !!lineItems && !!products),
+      filter(
+        ([orders, customers, lineItems, products]) =>
+          !!orders && !!customers && !!lineItems && !!products
+      ),
       map(([orders, customers, lineItems, products]) => {
-        return orders.map((order) => {
+        return orders.map(order => {
           const c: Customer = customers[order.customerId],
             l: LineItem[] = [],
             p: Product[] = [];
 
           // find the line items
-          order.lineItemIds.forEach((id) => {
+          order.lineItemIds.forEach(id => {
             if (lineItems[id]) {
               l.push(lineItems[id]);
             }
           });
 
           // find the products
-          l.forEach((lineItem) => {
+          l.forEach(lineItem => {
             if (products[lineItem.productId]) {
               p.push(products[lineItem.productId]);
             }

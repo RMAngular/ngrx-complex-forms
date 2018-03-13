@@ -27,14 +27,14 @@ export class ProductComponent implements OnInit {
   ngOnInit() {
     this.product$ = this.activatedRoute.paramMap.pipe(
       map(params => params.get('id')),
-      tap(id => this.store.dispatch(new LoadProduct({ id: id }))),
+      tap(id => this.store.dispatch(new LoadProduct({ id: +id }))),
       switchMap(() => this.store.pipe(select(fromStore.getSelectedProduct)))
     );
   }
 
   delete(product: Product) {
     // todo add a confirmation window using ngrx
-    this.store.dispatch(new DeleteProduct({ id: product.id }));
+    this.store.dispatch(new DeleteProduct({ product: product }));
     this.router.navigate(['products']);
   }
 

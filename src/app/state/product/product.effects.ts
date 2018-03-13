@@ -1,13 +1,26 @@
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { Actions, Effect } from '@ngrx/effects';
 import { Action, Store, select } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
-import { map, switchMap, catchError, withLatestFrom } from 'rxjs/operators';
+import {
+  map,
+  switchMap,
+  catchError,
+  withLatestFrom,
+  tap
+} from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
 
 import { Product } from './product.model';
 import {
   ProductActionTypes,
+  AddProduct,
+  AddProductFail,
+  AddProductSuccess,
+  DeleteProduct,
+  DeleteProductFail,
+  DeleteProductSuccess,
   LoadProductsSuccess,
   LoadProductsFail,
   LoadProduct,
@@ -23,6 +36,35 @@ import { ProductService } from '@core/services/product.service';
 
 @Injectable()
 export class ProductEffects {
+  @Effect()
+  add: Observable<Action> = this.actions$
+    .ofType<AddProduct>(ProductActionTypes.AddProduct)
+    .pipe(
+      switchMap(action => this.service.save(action.payload.product)),
+      map(
+        (product: Product) => new AddProductSuccess({ product: product }),
+        catchError(err => of(new AddProductFail()))
+      )
+    );
+
+  @Effect({
+    dispatch: false
+  })
+  addSuccess: Observable<Action> = this.actions$
+    .ofType<AddProductSuccess>(ProductActionTypes.AddProductSuccess)
+    .pipe(tap(() => this.router.navigate(['products'])));
+
+  @Effect()
+  delete: Observable<Action> = this.actions$
+    .ofType<DeleteProduct>(ProductActionTypes.DeleteProduct)
+    .pipe(
+      switchMap(action => this.service.delete(action.payload.product)),
+      map(
+        (product: Product) => new DeleteProductSuccess({ product: product }),
+        catchError(err => of(new DeleteProductFail()))
+      )
+    );
+
   @Effect()
   load: Observable<Action> = this.actions$
     .ofType(ProductActionTypes.LoadProducts)
@@ -62,6 +104,7 @@ export class ProductEffects {
 
   constructor(
     private actions$: Actions,
+    private router: Router,
     private service: ProductService,
     private store: Store<AppState>
   ) {}

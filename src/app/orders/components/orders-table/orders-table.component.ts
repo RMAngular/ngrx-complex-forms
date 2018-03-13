@@ -13,7 +13,7 @@ import { Product } from '@state/product/product.model';
 export class OrdersTableComponent implements OnInit {
   displayedColumns = ['id', 'customer', 'total'];
   @Input() ordersView: Array<OrderView>;
-  @Input() selectedOrderId: string;
+  @Input() selectedOrderId: number;
   @Output() orderClicked = new EventEmitter<Order>();
 
   constructor() { }
@@ -27,16 +27,18 @@ export class OrdersTableComponent implements OnInit {
 
     // using the order view, calculate the product price * lineItem qty
     return orderView.lineItems
-      .map((lineItem) => {
-        const p = orderView.products.find((product) => product.id === lineItem.productId),
-          price = p ? p.price : 0;
+      .map(lineItem => {
+        const p = orderView.products.find(
+          product => product.id === lineItem.productId
+        ),
+          price = p.price;
 
         return lineItem.quantity * price;
       })
       .reduce((prev, current) => prev + current);
   }
 
-  getProductPrice(orderView: OrderView, id: string) {
+  getProductPrice(orderView: OrderView, id: number) {
     const p = orderView.products.find((product: Product) => product.id === id);
 
     return p.price;

@@ -1,5 +1,5 @@
 export interface LineItem {
-  id: string;
-  productId: string;
+  id: number;
+  productId: number;
   quantity: number;
 }

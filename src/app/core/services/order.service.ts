@@ -8,20 +8,18 @@ import { Order } from '@state/order/order.model';
 
 @Injectable()
 export class OrderService {
-  private ordersUrl = 'app/orders';  // URL to web api
+  private ordersUrl = 'app/orders'; // URL to web api
 
-  constructor(private httpClient: HttpClient) { }
+  constructor(private httpClient: HttpClient) {}
 
   getOrders(): Observable<Array<Order>> {
-    return this.httpClient
-      .get<Order[]>(this.ordersUrl);
+    return this.httpClient.get<Order[]>(this.ordersUrl);
   }
 
-  getOrder(id: string): Observable<Order> {
-    return this.getOrders()
-      .pipe(
-        map(orders => orders.find(order => order.id === id))
-      );
+  getOrder(id: number): Observable<Order> {
+    return this.getOrders().pipe(
+      map(orders => orders.find(order => order.id === id))
+    );
   }
 
   save(order: Order): Observable<Order> {
@@ -34,29 +32,20 @@ export class OrderService {
   delete(order: Order): Observable<Order> {
     const url = `${this.ordersUrl}/${order.id}`;
 
-    return this.httpClient.delete<void>(url)
-      .pipe(
-        switchMap(() => of(order))
-      );
+    return this.httpClient.delete<void>(url).pipe(switchMap(() => of(order)));
   }
 
   // Add new Order
   private post(order: Order): Observable<Order> {
     // Only post the name property so the in-memory service will
     //  assign a new ID
-    return this.httpClient
-      .post<Order>(this.ordersUrl, order);
+    return this.httpClient.post<Order>(this.ordersUrl, order);
   }
 
   // Update existing Order
   private put(order: Order): Observable<Order> {
     const url = `${this.ordersUrl}/${order.id}`;
 
-    return this.httpClient
-      .put(url, order)
-      .pipe(
-        switchMap(() => of(order))
-      );
+    return this.httpClient.put(url, order).pipe(switchMap(() => of(order)));
   }
-
 }

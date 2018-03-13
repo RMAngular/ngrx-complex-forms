@@ -28,12 +28,12 @@ export class OrderComponent implements OnInit {
   constructor(
     private activatedRoute: ActivatedRoute,
     private store: Store<fromStore.State>
-  ) { }
+  ) {}
 
   ngOnInit() {
     this.order$ = this.activatedRoute.paramMap.pipe(
       map(params => params.get('id')),
-      tap(id => this.store.dispatch(new LoadOrder({ id: id }))),
+      tap(id => this.store.dispatch(new LoadOrder({ id: +id }))),
       switchMap(() => this.store.pipe(select(getSelectedOrder)))
     );
 

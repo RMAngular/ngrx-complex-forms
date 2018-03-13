@@ -4,7 +4,7 @@ import { ProductActions, ProductActionTypes } from './product.actions';
 
 export interface State extends EntityState<Product> {
   // additional entities state properties
-  selectedProductId: string;
+  selectedProductId: number;
   loading: boolean;
   error: string;
 }
@@ -37,7 +37,6 @@ export function reducer(state = initialState, action: ProductActions): State {
     }
 
     case ProductActionTypes.UpdateProduct: {
-      debugger;
       return adapter.updateOne(action.payload.product, state);
     }
 
@@ -46,7 +45,7 @@ export function reducer(state = initialState, action: ProductActions): State {
     }
 
     case ProductActionTypes.DeleteProduct: {
-      return adapter.removeOne(action.payload.id, state);
+      return adapter.removeOne(action.payload.product.id, state);
     }
 
     case ProductActionTypes.DeleteProducts: {

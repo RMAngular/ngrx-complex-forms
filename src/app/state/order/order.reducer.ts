@@ -4,7 +4,7 @@ import { OrderActions, OrderActionTypes } from './order.actions';
 
 export interface State extends EntityState<Order> {
   // additional entities state properties
-  selectedOrderId: string;
+  selectedOrderId: number;
   loading: boolean;
   error: string;
 }
@@ -18,10 +18,7 @@ export const initialState: State = adapter.getInitialState({
   error: ''
 });
 
-export function reducer(
-  state = initialState,
-  action: OrderActions
-): State {
+export function reducer(state = initialState, action: OrderActions): State {
   switch (action.type) {
     case OrderActionTypes.AddOrder: {
       return adapter.addOne(action.payload.order, state);

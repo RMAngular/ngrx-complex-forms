@@ -4,7 +4,7 @@ import { LineItemActions, LineItemActionTypes } from './line-item.actions';
 
 export interface State extends EntityState<LineItem> {
   // additional entities state properties
-  selectedLineItemId: string;
+  selectedLineItemId: number;
   loading: boolean;
   error: string;
 }
@@ -18,10 +18,7 @@ export const initialState: State = adapter.getInitialState({
   error: ''
 });
 
-export function reducer(
-  state = initialState,
-  action: LineItemActions
-): State {
+export function reducer(state = initialState, action: LineItemActions): State {
   switch (action.type) {
     case LineItemActionTypes.AddLineItem: {
       return adapter.addOne(action.payload.lineItem, state);

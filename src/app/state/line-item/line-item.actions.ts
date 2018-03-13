@@ -24,7 +24,7 @@ export class LoadLineItems implements Action {
 export class LoadLineItemsSuccess implements Action {
   readonly type = LineItemActionTypes.LoadLineItemsSuccess;
 
-  constructor(public payload: { lineItems: LineItem[] }) { }
+  constructor(public payload: { lineItems: LineItem[] }) {}
 }
 
 export class LoadLineItemsFail implements Action {
@@ -34,49 +34,49 @@ export class LoadLineItemsFail implements Action {
 export class AddLineItem implements Action {
   readonly type = LineItemActionTypes.AddLineItem;
 
-  constructor(public payload: { lineItem: LineItem }) { }
+  constructor(public payload: { lineItem: LineItem }) {}
 }
 
 export class UpsertLineItem implements Action {
   readonly type = LineItemActionTypes.UpsertLineItem;
 
-  constructor(public payload: { lineItem: Update<LineItem> }) { }
+  constructor(public payload: { lineItem: Update<LineItem> }) {}
 }
 
 export class AddLineItems implements Action {
   readonly type = LineItemActionTypes.AddLineItems;
 
-  constructor(public payload: { lineItems: LineItem[] }) { }
+  constructor(public payload: { lineItems: LineItem[] }) {}
 }
 
 export class UpsertLineItems implements Action {
   readonly type = LineItemActionTypes.UpsertLineItems;
 
-  constructor(public payload: { lineItems: Update<LineItem>[] }) { }
+  constructor(public payload: { lineItems: Update<LineItem>[] }) {}
 }
 
 export class UpdateLineItem implements Action {
   readonly type = LineItemActionTypes.UpdateLineItem;
 
-  constructor(public payload: { lineItem: Update<LineItem> }) { }
+  constructor(public payload: { lineItem: Update<LineItem> }) {}
 }
 
 export class UpdateLineItems implements Action {
   readonly type = LineItemActionTypes.UpdateLineItems;
 
-  constructor(public payload: { lineItems: Update<LineItem>[] }) { }
+  constructor(public payload: { lineItems: Update<LineItem>[] }) {}
 }
 
 export class DeleteLineItem implements Action {
   readonly type = LineItemActionTypes.DeleteLineItem;
 
-  constructor(public payload: { id: string }) { }
+  constructor(public payload: { id: number }) {}
 }
 
 export class DeleteLineItems implements Action {
   readonly type = LineItemActionTypes.DeleteLineItems;
 
-  constructor(public payload: { ids: string[] }) { }
+  constructor(public payload: { ids: number[] }) {}
 }
 
 export class ClearLineItems implements Action {
@@ -84,7 +84,7 @@ export class ClearLineItems implements Action {
 }
 
 export type LineItemActions =
-  LoadLineItems
+  | LoadLineItems
   | LoadLineItemsSuccess
   | LoadLineItemsFail
   | AddLineItem
