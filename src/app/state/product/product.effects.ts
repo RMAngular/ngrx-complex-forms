@@ -1,8 +1,15 @@
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { Actions, Effect } from '@ngrx/effects';
 import { Action, Store, select } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
-import { map, switchMap, catchError, withLatestFrom } from 'rxjs/operators';
+import {
+  map,
+  switchMap,
+  catchError,
+  withLatestFrom,
+  tap
+} from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
 
 import { Product } from './product.model';
@@ -36,6 +43,13 @@ export class ProductEffects {
         catchError(err => of(new AddProductFail()))
       )
     );
+
+  @Effect({
+    dispatch: false
+  })
+  addSuccess: Observable<Action> = this.actions$
+    .ofType<AddProductSuccess>(ProductActionTypes.AddProductSuccess)
+    .pipe(tap(() => this.router.navigate(['products'])));
 
   @Effect()
   load: Observable<Action> = this.actions$
@@ -76,6 +90,7 @@ export class ProductEffects {
 
   constructor(
     private actions$: Actions,
+    private router: Router,
     private service: ProductService,
     private store: Store<AppState>
   ) {}

@@ -26,6 +26,5 @@ export class ProductAddComponent {
 
   onSave() {
     this.store.dispatch(new AddProduct({ product: this.product }));
-    // todo navigate when AddProductSuccess notification is received
   }
 }
