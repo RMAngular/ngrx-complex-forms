@@ -8,20 +8,18 @@ import { Product } from '@state/product/product.model';
 
 @Injectable()
 export class ProductService {
-  private productsUrl = 'app/products';  // URL to web api
+  private productsUrl = 'app/products'; // URL to web api
 
-  constructor(private httpClient: HttpClient) { }
+  constructor(private httpClient: HttpClient) {}
 
   getProducts(): Observable<Array<Product>> {
-    return this.httpClient
-      .get<Product[]>(this.productsUrl);
+    return this.httpClient.get<Product[]>(this.productsUrl);
   }
 
   getProduct(id: string): Observable<Product> {
-    return this.getProducts()
-      .pipe(
-        map(products => products.find(product => product.id === id))
-      );
+    return this.getProducts().pipe(
+      map(products => products.find(product => product.id === id))
+    );
   }
 
   save(product: Product): Observable<Product> {
@@ -34,28 +32,20 @@ export class ProductService {
   delete(product: Product): Observable<Product> {
     const url = `${this.productsUrl}/${product.id}`;
 
-    return this.httpClient.delete<void>(url)
-      .pipe(
-        switchMap(() => of(product))
-      );
+    return this.httpClient.delete<void>(url).pipe(switchMap(() => of(product)));
   }
 
   // Add new Product
   private post(product: Product): Observable<Product> {
     // Only post the name property so the in-memory service will
     //  assign a new ID
-    return this.httpClient
-      .post<Product>(this.productsUrl, product);
+    return this.httpClient.post<Product>(this.productsUrl, product);
   }
 
   // Update existing Product
   private put(product: Product): Observable<Product> {
     const url = `${this.productsUrl}/${product.id}`;
 
-    return this.httpClient
-      .put(url, product)
-      .pipe(
-        switchMap(() => of(product))
-      );
+    return this.httpClient.put(url, product).pipe(switchMap(() => of(product)));
   }
 }

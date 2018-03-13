@@ -18,10 +18,7 @@ export const initialState: State = adapter.getInitialState({
   error: ''
 });
 
-export function reducer(
-  state = initialState,
-  action: ProductActions
-): State {
+export function reducer(state = initialState, action: ProductActions): State {
   switch (action.type) {
     case ProductActionTypes.AddProduct: {
       return adapter.addOne(action.payload.product, state);
@@ -40,6 +37,7 @@ export function reducer(
     }
 
     case ProductActionTypes.UpdateProduct: {
+      debugger;
       return adapter.updateOne(action.payload.product, state);
     }
 
@@ -89,6 +87,7 @@ export function reducer(
     case ProductActionTypes.LoadProductSuccess: {
       return {
         ...adapter.addOne(action.payload.product, state),
+        selectedProductId: action.payload.product.id,
         loading: false
       };
     }

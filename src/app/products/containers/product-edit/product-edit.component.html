@@ -1,0 +1,14 @@
+<div fxLayout="row" fxLayoutAlign="center stretch" class="product-edit-container">
+  <div fxFlex.xs="90%" fxFlex.sm="80%" fxFlex.md="70%" fxFlex.lg="65%" fxFlex.xl="60%">
+    <mat-card *ngIf="product$ | async as p">
+      <mat-card-header>
+        <mat-card-title>
+          <h2>{{ p.name }}</h2>
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <app-product-form [product]="p" (productChange)="onProductChange($event)"></app-product-form>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>
