@@ -1,3 +1,23 @@
-<p>
-  order-form works!
-</p>
+<form ng-form="">
+  <mat-form-field>
+    <label>{{order.id}}</label>
+  </mat-form-field>
+
+  <mat-form-field>
+    <label>{{customer.firstName}} {{customer.lastName}}</label>
+  </mat-form-field>
+
+  <div *ngFor="let lineItem of lineItems">
+    <mat-select placeholder="Product" [formControl]="productId" required>
+      <mat-option *ngFor="let product of products" [value]="product.id">
+        {{product.name}}
+      </mat-option>
+    </mat-select>
+    <mat-form-field>
+      <input matInput placeholder="Quantity" [formControl]="productId">
+    </mat-form-field>
+    <mat-form-field>
+      <label>{{getTotal()}}</label>
+    </mat-form-field>
+  </div>
+</form>
