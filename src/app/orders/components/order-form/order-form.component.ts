@@ -5,9 +5,10 @@ import {
   OnChanges,
   OnDestroy,
   Output,
-  SimpleChanges
+  SimpleChanges,
+  OnInit
 } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
 import { takeWhile, skip, debounceTime } from 'rxjs/operators';
 
 import { Order } from '@state/order/order.model';
@@ -20,7 +21,7 @@ import { Product } from '@state/product/product.model';
   templateUrl: './order-form.component.html',
   styleUrls: ['./order-form.component.scss']
 })
-export class OrderFormComponent implements OnChanges, OnDestroy {
+export class OrderFormComponent implements OnInit, OnChanges, OnDestroy {
   formGroup: FormGroup;
   @Input() order: Order;
   @Input() customer: Customer;
@@ -31,11 +32,14 @@ export class OrderFormComponent implements OnChanges, OnDestroy {
   private alive = true;
 
   constructor(private formBuilder: FormBuilder) {
+  }
+
+  ngOnInit() {
     this.buildForm();
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (this.order && changes['order'].isFirstChange()) {
+    if (this.order && changes['order'].isFirstChange() && this.formGroup) {
       this.formGroup.patchValue(this.order);
     }
   }
@@ -47,8 +51,14 @@ export class OrderFormComponent implements OnChanges, OnDestroy {
   private buildForm() {
     this.formGroup = this.formBuilder.group({
       customerId: ['', Validators.required],
-      lineItems: ['', Validators.required]
+      lineItems: this.formBuilder.array([
+      ])
     });
+
+    if (this.lineItems) {
+      this.lineItems.forEach((lineItem) => this.addLineItem(lineItem));
+    }
+
     this.formGroup.valueChanges
       .pipe(takeWhile(() => this.alive), skip(1), debounceTime(500))
       .subscribe(value => {
@@ -60,6 +70,23 @@ export class OrderFormComponent implements OnChanges, OnDestroy {
           ...value
         });
       });
+  }
+
+  initLineItem(lineItem?: LineItem) {
+    return this.formBuilder.group({
+      productId: [lineItem ? lineItem.productId : '', Validators.required],
+      quantity: [lineItem ? lineItem.quantity : '', Validators.required]
+    });
+  }
+
+  addLineItem(lineItem?: LineItem) {
+    const control = <FormArray>this.formGroup.controls['lineItems'];
+    control.push(this.initLineItem(lineItem));
+  }
+
+  removeLineItem(i: number) {
+    const control = <FormArray>this.formGroup.controls['lineItems'];
+    control.removeAt(i);
   }
 
   getTotal() {

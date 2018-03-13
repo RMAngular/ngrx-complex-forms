@@ -2,17 +2,18 @@
   <label>OrderId: {{order.id}}</label>
 
   <label>{{customer?.firstName}} {{customer?.lastName}}</label>
-
-  <div *ngFor="let lineItem of lineItems">
-    <mat-select placeholder="Product" [formControl]="productId" required>
-      <mat-option *ngFor="let product of products" [value]="product.id">
-        {{product.name}}
-      </mat-option>
-    </mat-select>
-    <mat-form-field>
-      <input matInput placeholder="Quantity" [formControl]="productId">
-    </mat-form-field>
-    <label>{{getTotal()}}</label>
+  <div formArrayName="lineItems">
+    <div *ngFor="let lineItem of formGroup.controls.lineItems.controls; let i = index;" [formGroupName]="i">
+      <mat-select placeholder="Product" formControlName="productId" required>
+        <mat-option *ngFor="let product of products" [value]="product.id">
+          {{product.name}}
+        </mat-option>
+      </mat-select>
+      <mat-form-field>
+        <input matInput placeholder="Quantity" formControlName="productId">
+      </mat-form-field>
+      <label>{{getTotal()}}</label>
+    </div>
   </div>
 </form>
 customer: {{customer | json}} lineItems: {{lineItems | json}} products: {{products | json}}
