@@ -2,21 +2,14 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Store, select } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
-import {
-  filter,
-  map,
-  switchMap,
-  tap,
-  takeWhile,
-  skipWhile
-} from 'rxjs/operators';
+import { map, switchMap, tap, takeWhile, skipWhile } from 'rxjs/operators';
 
 import * as fromStore from '@state/order/order.reducer';
 import * as fromCustomerStore from '@state/customer';
 import * as fromLineItemStore from '@state/line-item';
 import * as fromProductStore from '@state/product';
 import { getSelectedOrder } from '@state/order';
-import { LoadCustomer } from '@state/customer/customer.actions';
+import { LoadCustomer, LoadCustomers } from '@state/customer/customer.actions';
 import { LoadLineItems } from '@state/line-item/line-item.actions';
 import { LoadOrder } from '@state/order/order.actions';
 import { LoadProducts } from '@state/product/product.actions';
@@ -32,10 +25,12 @@ import { Product } from '@state/product/product.model';
 export class OrderComponent implements OnDestroy, OnInit {
   order$: Observable<Order>;
   customer$: Observable<Customer>;
+  customers$: Observable<Customer[]>;
   lineItems$: Observable<LineItem[]>;
   products$: Observable<Product[]>;
 
   private alive = true;
+  private order: Order;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -69,27 +64,21 @@ export class OrderComponent implements OnDestroy, OnInit {
       )
     );
 
-    // get line items for order
-    this.store.dispatch(new LoadLineItems());
+    // get all customers
+    this.store.dispatch(new LoadCustomers());
+    this.customers$ = this.store.pipe(
+      select(fromCustomerStore.getAllCustomers)
+    );
+
+    // get all line items
+    this.lineItemsExistInStore()
+      .pipe(takeWhile(() => this.alive))
+      .subscribe(exists => {
+        if (!exists) this.store.dispatch(new LoadLineItems());
+      });
     this.lineItems$ = this.store.pipe(
       select(fromLineItemStore.getOrderLineItems)
     );
-    // this.lineItems$ = this.order$.pipe(
-    //   skipWhile(order => !order),
-    //   map(order => order.lineItemIds),
-    //   tap(lineItemIds =>
-    //     lineItemIds.forEach(id => {
-    //       this.lineItemExistsInStore(id)
-    //         .pipe(takeWhile(() => this.alive))
-    //         .subscribe(exists => {
-    //           if (!exists) this.store.dispatch(new LoadLineItem({ id: id }));
-    //         });
-    //     })
-    //   ),
-    //   switchMap(() =>
-    //     this.store.pipe(select(fromLineItemStore.getOrderLineItems))
-    //   )
-    // );
 
     // get all products
     this.store.dispatch(new LoadProducts());
@@ -97,7 +86,11 @@ export class OrderComponent implements OnDestroy, OnInit {
   }
 
   onOrderChange(order: Order) {
-    console.log(order);
+    this.order = order;
+  }
+
+  save() {
+    console.log('save!', this.order);
   }
 
   private customerExistsInStore(id: number): Observable<boolean> {
@@ -109,12 +102,10 @@ export class OrderComponent implements OnDestroy, OnInit {
     );
   }
 
-  // private lineItemExistsInStore(id: number): Observable<boolean> {
-  //   return this.store.pipe(
-  //     select(fromLineItemStore.getAllLineItems),
-  //     map(
-  //       lineItems => lineItems.map(lineItem => lineItem.id).indexOf(id) !== -1
-  //     )
-  //   );
-  // }
+  private lineItemsExistInStore(): Observable<boolean> {
+    return this.store.pipe(
+      select(fromLineItemStore.getTotalLineItems),
+      map(count => count > 0)
+    );
+  }
 }

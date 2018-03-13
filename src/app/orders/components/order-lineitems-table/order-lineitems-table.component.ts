@@ -2,12 +2,11 @@ import {
   Component,
   EventEmitter,
   Input,
-  OnChanges,
-  OnDestroy,
-  Output
+  Output,
+  ViewChild
 } from '@angular/core';
-import { FormArray, FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { debounceTime, takeWhile } from 'rxjs/operators';
+import { FormArray, FormGroup } from '@angular/forms';
+import { MatTable } from '@angular/material';
 
 import { LineItem } from '@state/line-item/line-item.model';
 import { Product } from '@state/product/product.model';
@@ -17,47 +16,26 @@ import { Product } from '@state/product/product.model';
   templateUrl: './order-lineitems-table.component.html',
   styleUrls: ['./order-lineitems-table.component.scss']
 })
-export class OrderLineitemsTableComponent implements OnChanges, OnDestroy {
-  displayedColumns = ['index', 'product', 'quantity', 'total'];
-  formGroup: FormGroup;
-  @Input() lineItems: LineItem[];
-  @Output() lineItemsChange = new EventEmitter<LineItem[]>();
+export class OrderLineitemsTableComponent {
+  displayedColumns = ['index', 'product', 'quantity', 'total', 'actions'];
+  @Input() lineItemsFormArray: FormArray;
   @Input() products: Product[];
+  @Output() addLineItem = new EventEmitter<void>();
+  @Output() removeLineItemAt = new EventEmitter<number>();
 
-  private alive = true;
+  @ViewChild(MatTable) private matTable: MatTable<any>;
 
-  constructor(private formBuilder: FormBuilder) {
-    this.buildForm();
-  }
+  constructor() {}
 
-  ngOnChanges() {
-    if (this.lineItems) {
-      this.lineItems.forEach(lineItem => this.addLineItem(lineItem));
-    }
-  }
-
-  ngOnDestroy() {
-    this.alive = false;
-  }
-
-  addLineItem(lineItem?: LineItem) {
-    const lineItems = <FormArray>this.formGroup.get('lineItems');
-    lineItems.push(this.initLineItem(lineItem));
-  }
-
-  calculateLineItemTotal(lineItem: LineItem): number {
+  calculateLineItemTotal(lineItem: FormGroup): number {
     // verify lineItem
-    if (!lineItem) {
+    if (lineItem.invalid) {
       return 0;
     }
 
     // get productId and quantity values
-    const lineItems = <FormArray>this.formGroup.get('lineItems');
-    const index = this.lineItems
-      .map(lineItem => lineItem.id)
-      .indexOf(lineItem.id);
-    const productId = +lineItems.at(index).get('productId').value;
-    const quantity = +lineItems.at(index).get('quantity').value;
+    const productId = +lineItem.get('productId').value;
+    const quantity = +lineItem.get('quantity').value;
 
     //verify productId and quantity
     if (!productId || !quantity) {
@@ -73,32 +51,13 @@ export class OrderLineitemsTableComponent implements OnChanges, OnDestroy {
     return product.price * quantity;
   }
 
-  removeLineItem(i: number) {
-    const lineItems = <FormArray>this.formGroup.get('lineItems');
-    lineItems.removeAt(i);
+  onAddLineItemClick() {
+    this.addLineItem.emit();
+    this.matTable.renderRows();
   }
 
-  private buildForm() {
-    this.formGroup = this.formBuilder.group({
-      lineItems: this.formBuilder.array([])
-    });
-
-    this.formGroup.valueChanges
-      .pipe(takeWhile(() => this.alive), debounceTime(500))
-      .subscribe(value => {
-        if (!this.formGroup.valid) {
-          return;
-        }
-        debugger;
-        const lineItems = <FormArray>this.formGroup.get('lineItems');
-        this.lineItemsChange.emit(lineItems.value);
-      });
-  }
-
-  private initLineItem(lineItem?: LineItem): FormGroup {
-    return this.formBuilder.group({
-      productId: [lineItem ? lineItem.productId : 0, Validators.required],
-      quantity: [lineItem ? lineItem.quantity : 0, Validators.required]
-    });
+  onRemoveLineItemClick(i: number) {
+    this.removeLineItemAt.emit(i);
+    this.matTable.renderRows();
   }
 }

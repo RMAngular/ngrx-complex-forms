@@ -5,14 +5,15 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 
 import {
-  MatCardModule,
-  MatTableModule,
+  MatAutocompleteModule,
   MatButtonModule,
-  MatInputModule,
-  MatIconModule,
+  MatCardModule,
   MatFormFieldModule,
+  MatIconModule,
+  MatInputModule,
   MatOptionModule,
-  MatSelectModule
+  MatSelectModule,
+  MatTableModule
 } from '@angular/material';
 
 import { OrdersComponent } from './containers/orders/orders.component';
@@ -28,6 +29,7 @@ import { OrderLineitemsTableComponent } from './components/order-lineitems-table
     CommonModule,
     FlexLayoutModule,
     FormsModule,
+    MatAutocompleteModule,
     MatCardModule,
     MatTableModule,
     MatButtonModule,

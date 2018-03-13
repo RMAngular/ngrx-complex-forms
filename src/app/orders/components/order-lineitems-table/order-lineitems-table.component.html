@@ -1,32 +1,42 @@
-<form [formGroup]="formGroup">
-  <mat-table #table [dataSource]="lineItems" formArrayName="lineItems">
-    <ng-container matColumnDef="index">
-      <mat-header-cell *matHeaderCellDef>#</mat-header-cell>
-      <mat-cell *matCellDef="let lineItem; let i = index">{{i+1}}</mat-cell>
-    </ng-container>
-    <ng-container matColumnDef="product">
-      <mat-header-cell *matHeaderCellDef>Product</mat-header-cell>
-      <mat-cell *matCellDef="let lineItem; let i = index" [formGroupName]="i">
-        <mat-select placeholder="Product" formControlName="productId">
-          <mat-option *ngFor="let product of products" [value]="product.id">
-            {{product.name}}
-          </mat-option>
-        </mat-select>
-      </mat-cell>
-    </ng-container>
-    <ng-container matColumnDef="quantity">
-      <mat-header-cell *matHeaderCellDef>Quantity</mat-header-cell>
-      <mat-cell *matCellDef="let lineItem; let i = index" [formGroupName]="i">
-        <mat-form-field>
-          <input matInput placeholder="Quantity" formControlName="quantity">
-        </mat-form-field>
-      </mat-cell>
-    </ng-container>
-    <ng-container matColumnDef="total">
-      <mat-header-cell *matHeaderCellDef>Total</mat-header-cell>
-      <mat-cell *matCellDef="let lineItem">{{calculateLineItemTotal(lineItem) | currency}}</mat-cell>
-    </ng-container>
-    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-    <mat-row *matRowDef="let lineItem; columns: displayedColumns; let i = index;"></mat-row>
-  </mat-table>
-</form>
+<mat-table #table [dataSource]="lineItemsFormArray.controls">
+  <ng-container matColumnDef="index">
+    <mat-header-cell *matHeaderCellDef>#</mat-header-cell>
+    <mat-cell *matCellDef="let lineItem; let i = index">{{i+1}}</mat-cell>
+  </ng-container>
+  <ng-container matColumnDef="product">
+    <mat-header-cell *matHeaderCellDef>Product</mat-header-cell>
+    <mat-cell *matCellDef="let lineItem; let i = index;" [formGroup]="lineItem">
+      <mat-select placeholder="Product" formControlName="productId">
+        <mat-option *ngFor="let product of products" [value]="product.id">
+          {{product.name}}
+        </mat-option>
+      </mat-select>
+    </mat-cell>
+  </ng-container>
+  <ng-container matColumnDef="quantity">
+    <mat-header-cell *matHeaderCellDef>Quantity</mat-header-cell>
+    <mat-cell *matCellDef="let lineItem; let i = index;" [formGroup]="lineItem">
+      <mat-form-field>
+        <input matInput placeholder="Quantity" formControlName="quantity">
+      </mat-form-field>
+    </mat-cell>
+  </ng-container>
+  <ng-container matColumnDef="total">
+    <mat-header-cell *matHeaderCellDef>Total</mat-header-cell>
+    <mat-cell *matCellDef="let lineItem;">{{calculateLineItemTotal(lineItem) | currency}}</mat-cell>
+  </ng-container>
+  <ng-container matColumnDef="actions">
+    <mat-header-cell *matHeaderCellDef></mat-header-cell>
+    <mat-cell *matCellDef="let lineItem; let i = index;">
+      <button mat-icon-button (click)="onRemoveLineItemClick(i)">
+        <mat-icon>delete</mat-icon>
+      </button>
+    </mat-cell>
+  </ng-container>
+  <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+  <mat-row *matRowDef="let lineItem; columns: displayedColumns; let i = index;"></mat-row>
+</mat-table>
+
+<div class="actions" fxLayout="row" fxLayoutAlign="end center">
+  <button mat-button (click)="onAddLineItemClick()">Add Line Item</button>
+</div>

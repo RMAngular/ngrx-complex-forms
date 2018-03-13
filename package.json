@@ -30,8 +30,10 @@
     "@ngrx/schematics": "^5.2.0",
     "@ngrx/store": "^5.2.0",
     "@ngrx/store-devtools": "^5.2.0",
+    "@types/ramda": "^0.25.20",
     "angular-in-memory-web-api": "^0.5.4",
     "core-js": "^2.4.1",
+    "ramda": "^0.25.0",
     "rxjs": "^5.5.6",
     "zone.js": "^0.8.19"
   },
