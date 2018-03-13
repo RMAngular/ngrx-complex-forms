@@ -8,6 +8,9 @@ import { of } from 'rxjs/observable/of';
 import { Product } from './product.model';
 import {
   ProductActionTypes,
+  AddProduct,
+  AddProductFail,
+  AddProductSuccess,
   LoadProductsSuccess,
   LoadProductsFail,
   LoadProduct,
@@ -23,6 +26,17 @@ import { ProductService } from '@core/services/product.service';
 
 @Injectable()
 export class ProductEffects {
+  @Effect()
+  add: Observable<Action> = this.actions$
+    .ofType<AddProduct>(ProductActionTypes.AddProduct)
+    .pipe(
+      switchMap(action => this.service.save(action.payload.product)),
+      map(
+        (product: Product) => new AddProductSuccess({ product: product }),
+        catchError(err => of(new AddProductFail()))
+      )
+    );
+
   @Effect()
   load: Observable<Action> = this.actions$
     .ofType(ProductActionTypes.LoadProducts)

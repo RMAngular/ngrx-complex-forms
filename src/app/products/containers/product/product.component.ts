@@ -27,7 +27,7 @@ export class ProductComponent implements OnInit {
   ngOnInit() {
     this.product$ = this.activatedRoute.paramMap.pipe(
       map(params => params.get('id')),
-      tap(id => this.store.dispatch(new LoadProduct({ id: id }))),
+      tap(id => this.store.dispatch(new LoadProduct({ id: +id }))),
       switchMap(() => this.store.pipe(select(fromStore.getSelectedProduct)))
     );
   }

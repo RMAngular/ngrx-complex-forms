@@ -3,9 +3,9 @@ import { Customer } from '@state/customer/customer.model';
 import { Product } from '@state/product/product.model';
 
 export interface Order {
-  id: string;
-  customerId: string;
-  lineItemIds: string[];
+  id: number;
+  customerId: number;
+  lineItemIds: number[];
 }
 
 export interface OrderView {

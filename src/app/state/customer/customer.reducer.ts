@@ -4,7 +4,7 @@ import { CustomerActions, CustomerActionTypes } from './customer.actions';
 
 export interface State extends EntityState<Customer> {
   // additional entities state properties
-  selectedCustomerId: string;
+  selectedCustomerId: number;
   loading: boolean;
   error: string;
 }
@@ -18,10 +18,7 @@ export const initialState: State = adapter.getInitialState({
   error: ''
 });
 
-export function reducer(
-  state = initialState,
-  action: CustomerActions
-): State {
+export function reducer(state = initialState, action: CustomerActions): State {
   switch (action.type) {
     case CustomerActionTypes.AddCustomer: {
       return adapter.addOne(action.payload.customer, state);

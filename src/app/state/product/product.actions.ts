@@ -11,6 +11,8 @@ export enum ProductActionTypes {
   LoadProductFail = '[Product] Load Product Fail',
   SelectProduct = '[Product] Select product',
   AddProduct = '[Product] Add Product',
+  AddProductFail = '[Product] Add Product Fail',
+  AddProductSuccess = '[Product] Add Product Success',
   UpsertProduct = '[Product] Upsert Product',
   AddProducts = '[Product] Add Products',
   UpsertProducts = '[Product] Upsert Products',
@@ -40,7 +42,7 @@ export class LoadProductsFail implements Action {
 export class LoadProduct implements Action {
   readonly type = ProductActionTypes.LoadProduct;
 
-  constructor(public payload: { id: string }) {}
+  constructor(public payload: { id: number }) {}
 }
 
 export class LoadProductSuccess implements Action {
@@ -61,6 +63,16 @@ export class SelectProduct implements Action {
 
 export class AddProduct implements Action {
   readonly type = ProductActionTypes.AddProduct;
+
+  constructor(public payload: { product: Product }) {}
+}
+
+export class AddProductFail implements Action {
+  readonly type = ProductActionTypes.AddProductFail;
+}
+
+export class AddProductSuccess implements Action {
+  readonly type = ProductActionTypes.AddProductSuccess;
 
   constructor(public payload: { product: Product }) {}
 }
@@ -108,13 +120,13 @@ export class UpdateProducts implements Action {
 export class DeleteProduct implements Action {
   readonly type = ProductActionTypes.DeleteProduct;
 
-  constructor(public payload: { id: string }) {}
+  constructor(public payload: { id: number }) {}
 }
 
 export class DeleteProducts implements Action {
   readonly type = ProductActionTypes.DeleteProducts;
 
-  constructor(public payload: { ids: string[] }) {}
+  constructor(public payload: { ids: number[] }) {}
 }
 
 export class ClearProducts implements Action {
@@ -130,6 +142,8 @@ export type ProductActions =
   | LoadProductFail
   | SelectProduct
   | AddProduct
+  | AddProductFail
+  | AddProductSuccess
   | UpsertProduct
   | AddProducts
   | UpsertProducts
