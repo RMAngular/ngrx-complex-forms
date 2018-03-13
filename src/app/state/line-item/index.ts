@@ -33,10 +33,10 @@ export const getOrderLineItems = createSelector(
   getLineItemEntities,
   fromOrders.getSelectedOrder,
   (lineItems, order: Order) => {
-    let val: LineItem[] = [];
+    const val: LineItem[] = [];
 
     order.lineItemIds.forEach((id) => {
-      val.push(lineItems[id])
+      val.push(lineItems[id]);
     });
 
     return val;
