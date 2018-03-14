@@ -16,7 +16,6 @@ import {
 } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
 import { debounceTime, takeWhile } from 'rxjs/operators';
-import { clone } from 'ramda';
 
 import { Order } from '@state/order/order.model';
 import { Customer } from '@state/customer/customer.model';
@@ -45,37 +44,35 @@ export class OrderFormComponent implements OnChanges, OnDestroy {
    */
   formGroup: FormGroup;
 
-  @Input() order: Order;
   @Input() customer: Customer;
   @Input() customers: Customer[];
   @Input() lineItems: LineItem[];
+  @Input() order: Order;
   @Input() products: Product[];
+  @Output() lineItemsChange = new EventEmitter<LineItem[]>();
   @Output() orderChange = new EventEmitter<Order>();
 
+  // @Input()
+  // set lineItems(lineItems: LineItem[]) {
+  //   this._lineItems = lineItems;
+  //   if (this.order && this.lineItems) {
+  //     this.order.lineItemIds = this.lineItems.map(lineItem => lineItem.id);
+  //   }
+  // }
+
+  // get lineItems(): LineItem[] {
+  //   return this._lineItems;
+  // }
+
   private alive = true;
+  private _lineItems: LineItem[];
 
   constructor(private formBuilder: FormBuilder) {
     this.buildForm();
   }
 
-  get customerFormControl(): FormControl {
-    return this.formGroup.get('customerId') as FormControl;
-  }
-
-  get lineItemsFormArray(): FormArray {
-    return this.formGroup.get('lineItems') as FormArray;
-  }
-
   ngOnChanges(changes: SimpleChanges) {
-    if (
-      changes['lineItems'] !== undefined &&
-      changes['lineItems'].currentValue.length > 0
-    ) {
-      this.removeLineItems();
-      this.lineItems.forEach(lineItem => this.addLineItem(lineItem));
-      debugger;
-    }
-    if (this.order) {
+    if (changes['order'] && changes['order'].currentValue) {
       this.formGroup.patchValue(this.order);
     }
   }
@@ -84,50 +81,23 @@ export class OrderFormComponent implements OnChanges, OnDestroy {
     this.alive = false;
   }
 
-  addLineItem(lineItem?: LineItem) {
-    this.lineItemsFormArray.push(this.initLineItem(lineItem));
-  }
-
-  addLineItems(lineItems: LineItem[]) {
-    lineItems.forEach(lineItem => this.addLineItem(lineItem));
-  }
-
-  removeLineItemAt(i: number) {
-    this.lineItemsFormArray.removeAt(i);
-  }
-
-  removeLineItems() {
-    while (this.lineItemsFormArray.length > 0)
-      this.lineItemsFormArray.removeAt(this.lineItemsFormArray.length - 1);
+  onLineItemsChange(lineItems: LineItem[]) {
+    this.lineItemsChange.emit(lineItems);
   }
 
   private buildForm() {
     this.formGroup = this.formBuilder.group({
       id: [0, Validators.required],
       customerId: [0, Validators.required],
-      lineItems: this.formBuilder.array([])
+      lineItemIds: [[], Validators.required]
     });
-
     this.formGroup.valueChanges
       .pipe(takeWhile(() => this.alive), debounceTime(500))
       .subscribe(value => {
         if (!this.formGroup.valid) {
           return;
         }
-        const order: Order = {
-          id: this.formGroup.get('id').value,
-          customerId: this.formGroup.get('customerId').value,
-          lineItemIds: value.lineItems.map((lineItem: LineItem) => lineItem.id)
-        };
-        this.orderChange.emit(order);
+        this.orderChange.emit(this.order);
       });
-  }
-
-  private initLineItem(lineItem?: LineItem): FormGroup {
-    return this.formBuilder.group({
-      id: [lineItem ? lineItem.id : 0],
-      productId: [lineItem ? lineItem.productId : 0, Validators.required],
-      quantity: [lineItem ? lineItem.quantity : 0, Validators.required]
-    });
   }
 }

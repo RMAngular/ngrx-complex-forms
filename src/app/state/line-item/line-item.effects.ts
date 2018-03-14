@@ -2,7 +2,8 @@ import { Injectable } from '@angular/core';
 import { Actions, Effect } from '@ngrx/effects';
 import { Action } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
-import { map, switchMap, catchError } from 'rxjs/operators';
+import { forkJoin } from 'rxjs/observable/forkJoin';
+import { map, switchMap, catchError, mergeMap } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
 
 import { LineItem } from './line-item.model';
@@ -12,7 +13,10 @@ import {
   LoadLineItemSuccess,
   LoadLineItemFail,
   LoadLineItemsSuccess,
-  LoadLineItemsFail
+  LoadLineItemsFail,
+  UpsertLineItems,
+  UpsertLineItemsSuccess,
+  UpsertLineItemsFail
 } from './line-item.actions';
 import { LineItemService } from '@core/services/line-item.service';
 
@@ -38,6 +42,27 @@ export class LineItemEffects {
       map(
         (lineItem: LineItem) => new LoadLineItemSuccess({ lineItem: lineItem }),
         catchError(err => of(new LoadLineItemFail()))
+      )
+    );
+
+  @Effect()
+  upsert: Observable<Action> = this.actions$
+    .ofType<UpsertLineItems>(LineItemActionTypes.UpsertLineItem)
+    .pipe(
+      mergeMap(action =>
+        forkJoin(
+          action.payload.lineItems.map(lineItem =>
+            this.service.save({
+              ...lineItem.changes,
+              id: +lineItem.id
+            })
+          )
+        )
+      ),
+      map(
+        (lineItems: LineItem[]) =>
+          new UpsertLineItemsSuccess({ lineItems: lineItems }),
+        catchError(err => of(new UpsertLineItemsFail()))
       )
     );
 

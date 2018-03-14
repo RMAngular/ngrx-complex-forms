@@ -8,13 +8,18 @@ import { Product } from '@state/product/product.model';
   styleUrls: ['./products-table.component.scss']
 })
 export class ProductsTableComponent {
-  displayedColumns = ['id', 'name', 'price'];
+  displayedColumns = ['id', 'name', 'price', 'actions'];
   @Input() products: Product[];
-  @Output() productClicked = new EventEmitter<Product>();
+  @Output() delete = new EventEmitter<Product>();
+  @Output() edit = new EventEmitter<Product>();
 
   constructor() {}
 
-  select(product: Product) {
-    this.productClicked.emit(product);
+  onDeleteProduct(product: Product) {
+    this.delete.emit(product);
+  }
+
+  onEditProduct(product: Product) {
+    this.edit.emit(product);
   }
 }

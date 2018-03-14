@@ -6,11 +6,11 @@ import { debounceTime, map, startWith } from 'rxjs/operators';
 import { Customer } from '@state/customer/customer.model';
 
 @Component({
-  selector: 'app-order-customer',
-  templateUrl: './order-customer.component.html',
-  styleUrls: ['./order-customer.component.scss']
+  selector: 'app-customer',
+  templateUrl: './customer.component.html',
+  styleUrls: ['./customer.component.scss']
 })
-export class OrderCustomerComponent implements OnChanges, OnInit {
+export class CustomerComponent implements OnChanges, OnInit {
   filteredCustomers: Observable<Customer[]>;
   @Input() customer: Customer;
   @Input() customerFormControl: FormControl;

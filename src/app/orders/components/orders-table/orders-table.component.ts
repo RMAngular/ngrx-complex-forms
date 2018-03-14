@@ -11,14 +11,14 @@ import { Product } from '@state/product/product.model';
   styleUrls: ['./orders-table.component.scss']
 })
 export class OrdersTableComponent implements OnInit {
-  displayedColumns = ['id', 'customer', 'total'];
+  displayedColumns = ['id', 'customer', 'total', 'actions'];
   @Input() ordersView: Array<OrderView>;
-  @Input() selectedOrderId: number;
-  @Output() orderClicked = new EventEmitter<Order>();
+  @Output() delete = new EventEmitter<Order>();
+  @Output() edit = new EventEmitter<Order>();
 
-  constructor() { }
+  constructor() {}
 
-  ngOnInit() { }
+  ngOnInit() {}
 
   computeOrderTotal(orderView: OrderView): number {
     if (!orderView.lineItems.length) {
@@ -29,8 +29,8 @@ export class OrdersTableComponent implements OnInit {
     return orderView.lineItems
       .map(lineItem => {
         const p = orderView.products.find(
-          product => product.id === lineItem.productId
-        ),
+            product => product.id === lineItem.productId
+          ),
           price = p.price;
 
         return lineItem.quantity * price;
@@ -39,16 +39,17 @@ export class OrdersTableComponent implements OnInit {
   }
 
   getProductPrice(orderView: OrderView, id: number) {
-    const p = orderView.products.find((product: Product) => product.id === id);
-
-    return p.price;
+    const product = orderView.products.find(
+      (product: Product) => product.id === id
+    );
+    return product.price;
   }
 
-  isSelected(order: Order): Boolean {
-    return order.id === this.selectedOrderId;
+  onDeleteOrder(order: Order) {
+    this.delete.emit(order);
   }
 
-  select(order: Order) {
-    this.orderClicked.emit(order);
+  onEditOrder(order: Order) {
+    this.edit.emit(order);
   }
 }

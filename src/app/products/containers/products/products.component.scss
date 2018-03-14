@@ -1,17 +1,7 @@
-.actions {
-  margin-bottom: 16px;
-}
-
 .products-container {
   margin: 20px 0;
 
-  mat-card {
-    mat-card-header {
-      mat-card-title {
-        h2 {
-          margin-top: 0;
-        }
-      }
-    }
+  .actions {
+    margin-bottom: 16px;
   }
 }

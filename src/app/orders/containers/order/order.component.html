@@ -1,16 +1,8 @@
 <div fxLayout="row" fxLayoutAlign="center stretch" class="order-container">
   <div fxFlex.xs="90%" fxFlex.sm="80%" fxFlex.md="70%" fxFlex.lg="65%" fxFlex.xl="60%">
-    <mat-card *ngIf="order$ | async as o">
-      <mat-card-header>
-        <mat-card-title>
-          <h2>Order: {{o.id}}</h2>
-        </mat-card-title>
-      </mat-card-header>
-      <mat-card-content>
-        <app-order-form [order]="order$ | async" [customer]="customer$ | async" [customers]="customers$ | async" [lineItems]="lineItems$ | async"
-          [products]="products$ | async" (orderChange)="onOrderChange($event)"></app-order-form>
-      </mat-card-content>
-    </mat-card>
+    <h2>Order</h2>
+    <app-order-form [order]="order$ | async" [customer]="customer$ | async" [customers]="customers$ | async" [lineItems]="lineItems$ | async"
+      [products]="products$ | async" (lineItemsChange)="onLineItemsChange($event)" (orderChange)="onOrderChange($event)"></app-order-form>
     <div class="actions" fxLayout="row" fxLayoutAlign="end center">
       <button mat-button color="secondary" routerLink="/orders">Cancel</button>
       <button mat-raised-button color="primary" (click)="save()">Save</button>

@@ -1,9 +1,12 @@
 <form [formGroup]="formGroup">
   <h4>Customer</h4>
-  <app-order-customer [customer]="customer" [customerFormControl]="customerFormControl" [customers]="customers"></app-order-customer>
+  <app-customer [customer]="customer" [customerFormControl]="formGroup.get('customerId')" [customers]="customers"></app-customer>
 
   <h4>Line Items</h4>
   <pre>{{ lineItems | json }}</pre>
-  <app-order-lineitems-table [lineItemsFormArray]="lineItemsFormArray" [products]="products" (addLineItem)="addLineItem()"
-    (removeLineItemAt)="removeLineItemAt($event)" formArrayName="lineItems"></app-order-lineitems-table>
+  <app-lineitems-table [lineItems]="lineItems" [products]="products" (lineItemsChange)="onLineItemsChange($event)"></app-lineitems-table>
+
+  <h4>Order Summary</h4>
+  <pre>{{formGroup.value | json}}</pre>
+  <app-order-summary [lineItems]="lineItems" [order]="order" [products]="products"></app-order-summary>
 </form>

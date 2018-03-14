@@ -1,13 +1,11 @@
 .product-container {
   margin: 20px 0;
 
-  mat-card {
-    mat-card-header {
-      mat-card-title {
-        h2 {
-          margin-top: 0;
-        }
-      }
+  .actions {
+    margin: 16px 0;
+
+    button + button {
+      margin-left: 8px;
     }
   }
 }

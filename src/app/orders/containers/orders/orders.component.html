@@ -1,12 +1,11 @@
 <div fxLayout="row" fxLayoutAlign="center stretch" class="orders-container">
   <div fxFlex.xs="90%" fxFlex.sm="80%" fxFlex.md="70%" fxFlex.lg="65%" fxFlex.xl="60%">
-    <mat-card>
-      <mat-card-header>
-        <mat-card-title>Orders</mat-card-title>
-      </mat-card-header>
-      <mat-card-content>
-        <app-orders-table [ordersView]="orders$ | async" [selectedOrderId]="selectedId$ | async" (orderClicked)="onSelectOrder($event)"></app-orders-table>
-      </mat-card-content>
-    </mat-card>
+    <h2>Orders</h2>
+    <div class="actions" fxLayout="row" fxLayoutAlign="end center">
+      <button mat-raised-button color="primary" routerLink="add">
+        <mat-icon>add</mat-icon> Add Order
+      </button>
+    </div>
+    <app-orders-table [ordersView]="orders$ | async" (delete)="onDeleteOrder($event)" (edit)="onEditOrder($event)"></app-orders-table>
   </div>
 </div>

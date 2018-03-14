@@ -7,7 +7,11 @@ import { of } from 'rxjs/observable/of';
 import { AppState } from '@state/app.interfaces';
 import * as fromStore from '@state/product';
 import { Product } from '@state/product/product.model';
-import { LoadProducts, SelectProduct } from '@state/product/product.actions';
+import {
+  DeleteProduct,
+  LoadProducts,
+  SelectProduct
+} from '@state/product/product.actions';
 
 @Component({
   templateUrl: './products.component.html',
@@ -23,7 +27,11 @@ export class ProductsComponent implements OnInit {
     this.products$ = this.store.pipe(select(fromStore.getAllProducts));
   }
 
-  onSelectProduct(product: Product) {
+  onDeleteProduct(product: Product) {
+    this.store.dispatch(new DeleteProduct({ product: product }));
+  }
+
+  onEditProduct(product: Product) {
     this.store.dispatch(new SelectProduct({ product: product }));
     this.router.navigate(['products', product.id]);
   }

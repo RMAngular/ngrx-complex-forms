@@ -1,13 +1,18 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Store, select } from '@ngrx/store';
+import { Update } from '@ngrx/entity';
 import { Observable } from 'rxjs/Observable';
-import { map, switchMap, tap } from 'rxjs/operators';
+import { filter, map, switchMap, tap } from 'rxjs/operators';
 
 import { AppState } from '@state/app.interfaces';
 import * as fromStore from '@state/product';
 import { Product } from '@state/product/product.model';
-import { DeleteProduct, LoadProduct } from '@state/product/product.actions';
+import {
+  AddProduct,
+  LoadProduct,
+  UpdateProduct
+} from '@state/product/product.actions';
 
 @Component({
   selector: 'app-product',
@@ -17,6 +22,8 @@ import { DeleteProduct, LoadProduct } from '@state/product/product.actions';
 export class ProductComponent implements OnInit {
   product$: Observable<Product>;
 
+  private product: Product;
+
   constructor(
     private router: Router,
     private store: Store<AppState>,
@@ -25,19 +32,34 @@ export class ProductComponent implements OnInit {
 
   ngOnInit() {
     this.product$ = this.activatedRoute.paramMap.pipe(
+      filter(params => params.has('id')),
       map(params => params.get('id')),
       tap(id => this.store.dispatch(new LoadProduct({ id: +id }))),
       switchMap(() => this.store.pipe(select(fromStore.getSelectedProduct)))
     );
   }
 
-  delete(product: Product) {
-    // todo add a confirmation window using ngrx
-    this.store.dispatch(new DeleteProduct({ product: product }));
-    this.router.navigate(['products']);
+  onProductChange(product: Product) {
+    this.product = product;
   }
 
-  edit(product: Product) {
-    this.router.navigate(['products', product.id, 'edit']);
+  onSave() {
+    if (this.product.id) {
+      this.updateProduct(this.product);
+    } else {
+      this.addProduct(this.product);
+    }
+  }
+
+  private addProduct(product: Product) {
+    this.store.dispatch(new AddProduct({ product: product }));
+  }
+
+  private updateProduct(product: Product) {
+    const update: Update<Product> = {
+      id: product.id,
+      changes: product
+    };
+    this.store.dispatch(new UpdateProduct({ product: update }));
   }
 }

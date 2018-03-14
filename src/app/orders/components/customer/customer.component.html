@@ -1,0 +1,12 @@
+<mat-card>
+  <mat-card-content>
+    <mat-form-field>
+      <input matInput placeholder="Customer Name" aria-label="Customer Name" [matAutocomplete]="auto" [formControl]="customerFormControl">
+      <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayCustomer.bind(this)">
+        <mat-option *ngFor="let customer of filteredCustomers | async" [value]="customer.id">
+          {{customer.firstName}} {{customer.lastName}}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+  </mat-card-content>
+</mat-card>

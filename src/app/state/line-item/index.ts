@@ -35,5 +35,6 @@ export const getOrderLineItems = createSelector(
   getAllLineItems,
   fromOrders.getSelectedOrder,
   (lineItems, order: Order) =>
+    order &&
     lineItems.filter(lineItem => order.lineItemIds.indexOf(lineItem.id) !== -1)
 );

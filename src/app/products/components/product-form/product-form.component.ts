@@ -22,7 +22,6 @@ export class ProductFormComponent implements OnChanges, OnDestroy {
   formGroup: FormGroup;
   @Input() product: Product;
   @Output() productChange = new EventEmitter<Product>();
-  @Output() productValid = new EventEmitter<boolean>();
 
   private alive = true;
 
@@ -31,7 +30,7 @@ export class ProductFormComponent implements OnChanges, OnDestroy {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (this.product && changes['product'].isFirstChange()) {
+    if (changes['product'] && changes['product'].currentValue) {
       this.formGroup.patchValue(this.product);
     }
   }
@@ -48,14 +47,10 @@ export class ProductFormComponent implements OnChanges, OnDestroy {
     this.formGroup.valueChanges
       .pipe(takeWhile(() => this.alive), skip(1), debounceTime(500))
       .subscribe(value => {
-        this.productValid.emit(this.formGroup.valid);
         if (!this.formGroup.valid) {
           return;
         }
-        this.productChange.emit({
-          ...this.product,
-          ...value
-        });
+        this.productChange.emit(value);
       });
   }
 }

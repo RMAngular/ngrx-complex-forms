@@ -13,6 +13,8 @@ export enum LineItemActionTypes {
   UpsertLineItem = '[LineItem] Upsert LineItem',
   AddLineItems = '[LineItem] Add LineItems',
   UpsertLineItems = '[LineItem] Upsert LineItems',
+  UpsertLineItemsSuccess = '[LineItem] Upsert LineItems Success',
+  UpsertLineItemsFail = '[LineItem] Upsert LineItems Fail',
   UpdateLineItem = '[LineItem] Update LineItem',
   UpdateLineItems = '[LineItem] Update LineItems',
   DeleteLineItem = '[LineItem] Delete LineItem',
@@ -74,6 +76,16 @@ export class UpsertLineItems implements Action {
   constructor(public payload: { lineItems: Update<LineItem>[] }) {}
 }
 
+export class UpsertLineItemsSuccess implements Action {
+  readonly type = LineItemActionTypes.UpsertLineItemsSuccess;
+
+  constructor(public payload: { lineItems: LineItem[] }) {}
+}
+
+export class UpsertLineItemsFail implements Action {
+  readonly type = LineItemActionTypes.UpsertLineItemsFail;
+}
+
 export class UpdateLineItem implements Action {
   readonly type = LineItemActionTypes.UpdateLineItem;
 
@@ -113,6 +125,8 @@ export type LineItemActions =
   | UpsertLineItem
   | AddLineItems
   | UpsertLineItems
+  | UpsertLineItemsSuccess
+  | UpsertLineItemsFail
   | UpdateLineItem
   | UpdateLineItems
   | DeleteLineItem

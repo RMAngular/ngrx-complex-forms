@@ -11,18 +11,20 @@ import {
   MatFormFieldModule,
   MatIconModule,
   MatInputModule,
+  MatMenuModule,
   MatOptionModule,
   MatSelectModule,
   MatTableModule
 } from '@angular/material';
 
-import { OrdersComponent } from './containers/orders/orders.component';
+import { CustomerComponent } from './components/customer/customer.component';
+import { LineitemsTableComponent } from './components/lineitems-table/lineitems-table.component';
+import { OrderComponent } from './containers/order/order.component';
 import { OrderDetailComponent } from './components/order-detail/order-detail.component';
 import { OrderFormComponent } from './components/order-form/order-form.component';
+import { OrdersComponent } from './containers/orders/orders.component';
 import { OrdersTableComponent } from './components/orders-table/orders-table.component';
-import { OrderComponent } from './containers/order/order.component';
-import { OrderCustomerComponent } from './components/order-customer/order-customer.component';
-import { OrderLineitemsTableComponent } from './components/order-lineitems-table/order-lineitems-table.component';
+import { OrderSummaryComponent } from './components/order-summary/order-summary.component';
 
 @NgModule({
   imports: [
@@ -36,6 +38,7 @@ import { OrderLineitemsTableComponent } from './components/order-lineitems-table
     MatInputModule,
     MatIconModule,
     MatFormFieldModule,
+    MatMenuModule,
     MatOptionModule,
     MatSelectModule,
     MatTableModule,
@@ -43,13 +46,14 @@ import { OrderLineitemsTableComponent } from './components/order-lineitems-table
     RouterModule
   ],
   declarations: [
+    CustomerComponent,
+    LineitemsTableComponent,
     OrderComponent,
-    OrdersComponent,
     OrderDetailComponent,
     OrderFormComponent,
+    OrdersComponent,
     OrdersTableComponent,
-    OrderCustomerComponent,
-    OrderLineitemsTableComponent
+    OrderSummaryComponent
   ]
 })
 export class OrdersModule {}

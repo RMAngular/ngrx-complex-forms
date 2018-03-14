@@ -22,7 +22,7 @@ export class LineItemService {
     );
   }
 
-  save(lineItem: LineItem): Observable<LineItem> {
+  save(lineItem: Partial<LineItem>): Observable<Partial<LineItem>> {
     if (lineItem.id) {
       return this.put(lineItem);
     }
@@ -38,14 +38,14 @@ export class LineItemService {
   }
 
   // Add new LineItem
-  private post(lineItem: LineItem): Observable<LineItem> {
+  private post(lineItem: Partial<LineItem>): Observable<LineItem> {
     // Only post the name property so the in-memory service will
     //  assign a new ID
     return this.httpClient.post<LineItem>(this.lineItemsUrl, lineItem);
   }
 
   // Update existing LineItem
-  private put(lineItem: LineItem): Observable<LineItem> {
+  private put(lineItem: Partial<LineItem>): Observable<Partial<LineItem>> {
     const url = `${this.lineItemsUrl}/${lineItem.id}`;
 
     return this.httpClient

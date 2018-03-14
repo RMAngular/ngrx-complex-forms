@@ -1,26 +1,26 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { Store, select } from '@ngrx/store';
 import { Dictionary } from '@ngrx/entity/src/models';
 import { Observable } from 'rxjs/Observable';
 import { of } from 'rxjs/observable/of';
+import { combineLatest, filter, withLatestFrom, map } from 'rxjs/operators';
 
 import { AppState } from '@state/app.interfaces';
-
-import { Order, OrderView } from '@state/order/order.model';
-import { LineItem } from '@state/line-item/line-item.model';
 import * as fromStore from '@state/order';
 import * as fromCustomerStore from '@state/customer';
 import * as fromLineItemStore from '@state/line-item';
 import * as fromProductStore from '@state/product';
+import { LoadCustomers } from '@state/customer/customer.actions';
 import {
+  DeleteOrder,
   LoadOrders,
   SelectOrder,
   LoadOrdersView
 } from '@state/order/order.actions';
-import { Router } from '@angular/router';
 import { Customer } from '@state/customer/customer.model';
-import { LoadCustomers } from '@state/customer/customer.actions';
-import { combineLatest, filter, withLatestFrom, map } from 'rxjs/operators';
+import { LineItem } from '@state/line-item/line-item.model';
+import { Order, OrderView } from '@state/order/order.model';
 import { Product } from '@state/product/product.model';
 
 @Component({
@@ -28,7 +28,6 @@ import { Product } from '@state/product/product.model';
   styleUrls: ['./orders.component.scss']
 })
 export class OrdersComponent implements OnInit {
-  selectedId$: Observable<number>;
   orders$: Observable<OrderView[]>;
 
   constructor(private router: Router, private store: Store<AppState>) {}
@@ -44,8 +43,6 @@ export class OrdersComponent implements OnInit {
         select(fromLineItemStore.getLineItemEntities)
       ),
       products$ = this.store.pipe(select(fromProductStore.getProductEntities));
-
-    this.selectedId$ = this.store.pipe(select(fromStore.getSelectedOrderId));
 
     this.orders$ = orders$.pipe(
       combineLatest(customers$, lineItems$, products$),
@@ -79,7 +76,11 @@ export class OrdersComponent implements OnInit {
     );
   }
 
-  onSelectOrder(order) {
+  onDeleteOrder(order: Order) {
+    this.store.dispatch(new DeleteOrder({ id: order.id }));
+  }
+
+  onEditOrder(order: Order) {
     this.store.dispatch(new SelectOrder({ order: order }));
     this.router.navigate(['orders', order.id]);
   }
