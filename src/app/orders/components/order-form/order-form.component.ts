@@ -46,23 +46,11 @@ export class OrderFormComponent implements OnChanges, OnDestroy {
 
   @Input() customer: Customer;
   @Input() customers: Customer[];
+  @Input() lineItems: LineItem[];
   @Input() order: Order;
   @Input() products: Product[];
   @Output() lineItemsChange = new EventEmitter<LineItem[]>();
   @Output() orderChange = new EventEmitter<Order>();
-
-  @Input()
-  set lineItems(lineItems: LineItem[]) {
-    this._lineItems = lineItems;
-    if (this.order && this.lineItems) {
-      this.order.lineItemIds = this.lineItems.map(lineItem => lineItem.id);
-      this.orderChange.emit(this.order);
-    }
-  }
-
-  get lineItems(): LineItem[] {
-    return this._lineItems;
-  }
 
   private alive = true;
   private _lineItems: LineItem[];
@@ -93,6 +81,10 @@ export class OrderFormComponent implements OnChanges, OnDestroy {
         if (!this.formGroup.valid) {
           return;
         }
+        if (this.order && this.lineItems) {
+          this.order.lineItemIds = this.lineItems.map(lineItem => lineItem.id);
+        }
+        this.lineItemsChange.emit(this.lineItems);
         this.orderChange.emit(this.order);
       });
   }
