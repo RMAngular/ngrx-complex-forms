@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
 import { Actions, Effect } from '@ngrx/effects';
-import { Action } from '@ngrx/store';
+import { Action, Store, select } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import { forkJoin } from 'rxjs/observable/forkJoin';
-import { map, switchMap, catchError, mergeMap } from 'rxjs/operators';
+import { map, switchMap, catchError, mergeMap, withLatestFrom } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
 
 import { LineItem } from './line-item.model';
+import * as fromStore from './';
 import {
   LineItemActionTypes,
   LoadLineItem,
@@ -19,6 +20,7 @@ import {
   UpsertLineItemsFail
 } from './line-item.actions';
 import { LineItemService } from '@core/services/line-item.service';
+import { AppState } from '@state/app.interfaces';
 
 @Injectable()
 export class LineItemEffects {
@@ -49,13 +51,11 @@ export class LineItemEffects {
   upsert: Observable<Action> = this.actions$
     .ofType<UpsertLineItems>(LineItemActionTypes.UpsertLineItem)
     .pipe(
-      mergeMap(action =>
+      withLatestFrom(this.store.pipe(select(fromStore.getOrderLineItems))),
+      mergeMap(([action, lineItems]) =>
         forkJoin(
-          action.payload.lineItems.map(lineItem =>
-            this.service.save({
-              ...lineItem.changes,
-              id: +lineItem.id
-            })
+          lineItems.map(lineItem =>
+            this.service.save(lineItem)
           )
         )
       ),
@@ -66,5 +66,6 @@ export class LineItemEffects {
       )
     );
 
-  constructor(private actions$: Actions, private service: LineItemService) {}
+  constructor(private actions$: Actions, private service: LineItemService,
+    private store: Store<AppState>) { }
 }

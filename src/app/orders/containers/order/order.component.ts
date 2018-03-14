@@ -68,21 +68,7 @@ export class OrderComponent implements OnDestroy, OnInit {
       select(fromCustomerStore.getAllCustomers)
     );
 
-    // get customer for order
-    this.customer$ = this.order$.pipe(
-      skipWhile(order => !order),
-      tap(order => {
-        this.customerExistsInStore(order.customerId)
-          .pipe(takeWhile(() => this.alive))
-          .subscribe(exists => {
-            if (!exists)
-              this.store.dispatch(new LoadCustomer({ id: order.customerId }));
-          });
-      }),
-      switchMap(() =>
-        this.store.pipe(select(fromCustomerStore.getCustomerBySelectedOrder))
-      )
-    );
+    this.customer$ = this.store.pipe(select(fromCustomerStore.getCustomerBySelectedOrder));
 
     // get all line items
     this.store.dispatch(new LoadLineItems());
@@ -127,15 +113,6 @@ export class OrderComponent implements OnDestroy, OnInit {
           changes: this.order
         }
       })
-    );
-  }
-
-  private customerExistsInStore(id: number): Observable<boolean> {
-    return this.store.pipe(
-      select(fromCustomerStore.getAllCustomers),
-      map(
-        customers => customers.map(customer => customer.id).indexOf(id) !== -1
-      )
     );
   }
 }

@@ -73,7 +73,7 @@ export class OrderEffects {
     .pipe(
       withLatestFrom(this.store.pipe(select(fromStore.getSelectedOrder))),
       switchMap(([action, order]) =>
-        this.service.save({ ...order, ...action.payload.order.changes })
+        this.service.save(order)
       ),
       map(
         (order: Order) => new UpdateOrderSuccess({ order: order }),
@@ -85,5 +85,5 @@ export class OrderEffects {
     private actions$: Actions,
     private service: OrderService,
     private store: Store<AppState>
-  ) {}
+  ) { }
 }
