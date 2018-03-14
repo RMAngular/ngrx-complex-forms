@@ -47,23 +47,10 @@ export class LineitemsTableComponent implements OnDestroy, OnChanges {
     if (
       changes['lineItems'] &&
       changes['lineItems'].currentValue &&
-      changes['lineItems'].currentValue.length > 0
+      changes['lineItems'].currentValue.length > 0 &&
+      this.lineItemsFormArray.controls.length === 0
     ) {
-      // remove all line items
-      this.removeLineItemFormGroups();
-
-      // add current line items
-      this.addLineItemFormGroups(this.lineItems);
-
-      // observe form value changes
-      this.formGroup.valueChanges
-        .pipe(takeWhile(() => this.alive), debounceTime(500))
-        .subscribe(value => {
-          if (!this.formGroup.valid) {
-            return;
-          }
-          this.lineItemsChange.emit(value.lineItems);
-        });
+      this.populateForm();
     }
   }
 
@@ -112,6 +99,14 @@ export class LineitemsTableComponent implements OnDestroy, OnChanges {
     this.formGroup = this.formBuilder.group({
       lineItems: this.formBuilder.array([])
     });
+    this.formGroup.valueChanges
+      .pipe(takeWhile(() => this.alive), debounceTime(500))
+      .subscribe(value => {
+        if (!this.formGroup.valid) {
+          return;
+        }
+        this.lineItemsChange.emit(value.lineItems);
+      });
   }
 
   private getLineItemFormGroup(lineItem?: LineItem): FormGroup {
@@ -120,6 +115,11 @@ export class LineitemsTableComponent implements OnDestroy, OnChanges {
       productId: [lineItem ? lineItem.productId : 0, Validators.required],
       quantity: [lineItem ? lineItem.quantity : 0, Validators.required]
     });
+  }
+
+  private populateForm() {
+    this.removeLineItemFormGroups();
+    this.addLineItemFormGroups(this.lineItems);
   }
 
   private removeLineItemFormGroupAt(i: number) {

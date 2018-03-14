@@ -24,9 +24,15 @@ export class OrderSummaryComponent implements OnInit {
     }
     return this.lineItems
       .map(lineItem => {
+        if (!lineItem.quantity) {
+          return 0;
+        }
         const product = this.products.find(
           product => product.id === lineItem.productId
         );
+        if (product === undefined) {
+          return 0;
+        }
         return lineItem.quantity * product.price;
       })
       .reduce((prev, current) => prev + current);

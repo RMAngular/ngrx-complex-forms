@@ -3,10 +3,8 @@
   <app-customer [customer]="customer" [customerFormControl]="formGroup.get('customerId')" [customers]="customers"></app-customer>
 
   <h4>Line Items</h4>
-  <pre>{{ lineItems | json }}</pre>
-  <app-lineitems-table [lineItems]="lineItems" [products]="products" (lineItemsChange)="onLineItemsChange($event)"></app-lineitems-table>
+  <app-lineitems-table [(lineItems)]="lineItems" [products]="products"></app-lineitems-table>
 
   <h4>Order Summary</h4>
-  <pre>{{formGroup.value | json}}</pre>
   <app-order-summary [lineItems]="lineItems" [order]="order" [products]="products"></app-order-summary>
 </form>
