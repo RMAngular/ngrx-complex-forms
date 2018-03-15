@@ -1,6 +1,6 @@
 <form [formGroup]="formGroup">
   <h4>Customer</h4>
-  <app-customer [customer]="customer" [customerFormControl]="formGroup.get('customerId')" [customers]="customers"></app-customer>
+  <app-customer [(customer)]="customer" [customers]="customers"></app-customer>
 
   <h4>Line Items</h4>
   <app-lineitems-table [(lineItems)]="lineItems" [products]="products"></app-lineitems-table>
