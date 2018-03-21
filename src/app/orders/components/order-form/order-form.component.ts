@@ -44,16 +44,38 @@ export class OrderFormComponent implements OnChanges, OnDestroy {
    */
   formGroup: FormGroup;
 
-  @Input() customer: Customer;
   @Input() customers: Customer[];
-  @Input() lineItems: LineItem[];
   @Input() order: Order;
   @Input() products: Product[];
   @Output() lineItemsChange = new EventEmitter<LineItem[]>();
   @Output() orderChange = new EventEmitter<Order>();
 
   private alive = true;
+  private _customer: Customer;
   private _lineItems: LineItem[];
+
+  @Input()
+  set customer(customer: Customer) {
+    this._customer = customer;
+    if (this.order && customer) {
+      this.order.customerId = customer.id;
+    }
+    this.orderChange.emit(this.order);
+  }
+
+  get customer(): Customer {
+    return this._customer;
+  }
+
+  @Input()
+  set lineItems(lineItems: LineItem[]) {
+    this._lineItems = lineItems;
+    this.lineItemsChange.emit(lineItems);
+  }
+
+  get lineItems(): LineItem[] {
+    return this._lineItems;
+  }
 
   constructor(private formBuilder: FormBuilder) {
     this.buildForm();

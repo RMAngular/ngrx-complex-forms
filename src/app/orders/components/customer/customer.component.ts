@@ -1,7 +1,15 @@
-import { Component, OnInit, Input, OnChanges } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  Output
+} from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
-import { debounceTime, map, startWith } from 'rxjs/operators';
+import { debounceTime, map, takeWhile } from 'rxjs/operators';
 
 import { Customer } from '@state/customer/customer.model';
 
@@ -10,18 +18,27 @@ import { Customer } from '@state/customer/customer.model';
   templateUrl: './customer.component.html',
   styleUrls: ['./customer.component.scss']
 })
-export class CustomerComponent implements OnChanges, OnInit {
+export class CustomerComponent implements OnChanges, OnDestroy, OnInit {
+  customerFormControl: FormControl;
   filteredCustomers: Observable<Customer[]>;
   @Input() customer: Customer;
-  @Input() customerFormControl: FormControl;
   @Input() customers: Customer[];
+  @Output() customerChange = new EventEmitter<Customer>();
 
-  constructor() {}
+  private alive = true;
+
+  constructor() {
+    this.buildForm();
+  }
 
   ngOnChanges() {
     if (this.customer) {
       this.customerFormControl.setValue(this.customer.id);
     }
+  }
+
+  ngOnDestroy() {
+    this.alive = false;
   }
 
   ngOnInit() {
@@ -51,5 +68,18 @@ export class CustomerComponent implements OnChanges, OnInit {
       customer =>
         regex.test(customer.firstName) || regex.test(customer.lastName)
     );
+  }
+
+  private buildForm() {
+    this.customerFormControl = new FormControl();
+    this.customerFormControl.valueChanges
+      .pipe(takeWhile(() => this.alive), debounceTime(250))
+      .subscribe(value => {
+        if (this.customerFormControl.invalid) {
+          return;
+        }
+        const customer = this.customers.find(customer => customer.id === value);
+        this.customerChange.emit(customer);
+      });
   }
 }

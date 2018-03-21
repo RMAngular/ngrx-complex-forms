@@ -3,7 +3,9 @@ import * as fromCustomers from './customer.reducer';
 import * as fromOrders from '../order';
 import { State as CustomersState } from './customer.reducer';
 
-export const getCustomersState = createFeatureSelector<CustomersState>('customer');
+export const getCustomersState = createFeatureSelector<CustomersState>(
+  'customer'
+);
 
 export const {
   selectAll: getAllCustomers,
@@ -27,13 +29,11 @@ export const getError = createSelector(
   fromCustomers.getError
 );
 
-export const getCustomerById = (id) => createSelector(
-  getCustomerEntities,
-  (customers) => customers[id]
-);
+export const getCustomerById = id =>
+  createSelector(getCustomerEntities, customers => customers[id]);
 
 export const getCustomerBySelectedOrder = createSelector(
   getCustomerEntities,
   fromOrders.getSelectedOrder,
-  (customers, order) => customers[order.customerId]
+  (customers, order) => customers && order && customers[order.customerId]
 );

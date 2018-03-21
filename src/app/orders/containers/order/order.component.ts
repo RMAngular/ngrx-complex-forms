@@ -1,3 +1,4 @@
+import { getOrderLineItems } from './../../../state/line-item/index';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Store, select } from '@ngrx/store';
@@ -68,7 +69,9 @@ export class OrderComponent implements OnDestroy, OnInit {
       select(fromCustomerStore.getAllCustomers)
     );
 
-    this.customer$ = this.store.pipe(select(fromCustomerStore.getCustomerBySelectedOrder));
+    this.customer$ = this.store.pipe(
+      select(fromCustomerStore.getCustomerBySelectedOrder)
+    );
 
     // get all line items
     this.store.dispatch(new LoadLineItems());
@@ -91,7 +94,7 @@ export class OrderComponent implements OnDestroy, OnInit {
   }
 
   save() {
-    console.log('save!', this.order);
+    console.log('save!', this.lineItems, this.order);
 
     // upsert each line item
     this.store.dispatch(
@@ -106,12 +109,19 @@ export class OrderComponent implements OnDestroy, OnInit {
     );
 
     // update order
-    this.store.dispatch(
-      new UpdateOrder({
-        order: {
-          id: this.order.id,
-          changes: this.order
-        }
+    this.store.pipe(
+      select(fromLineItemStore.getOrderLineItems),
+      map(lineItems => {
+        // console.log(lineItems);
+        this.order.lineItemIds = lineItems.map(lineItem => lineItem.id);
+        this.store.dispatch(
+          new UpdateOrder({
+            order: {
+              id: this.order.id,
+              changes: this.order
+            }
+          })
+        );
       })
     );
   }

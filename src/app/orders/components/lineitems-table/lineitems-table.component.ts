@@ -105,7 +105,13 @@ export class LineitemsTableComponent implements OnDestroy, OnChanges {
         if (!this.formGroup.valid) {
           return;
         }
-        this.lineItemsChange.emit(value.lineItems);
+        const lineItems: LineItem[] = value.lineItems.map(lineItem => {
+          return {
+            ...lineItem,
+            quantity: +lineItem.quantity
+          };
+        });
+        this.lineItemsChange.emit(lineItems);
       });
   }
 
