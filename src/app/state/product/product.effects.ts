@@ -94,7 +94,7 @@ export class ProductEffects {
     .pipe(
       withLatestFrom(this.store.pipe(select(fromStore.getSelectedProduct))),
       switchMap(([action, product]) =>
-        this.service.save({ ...product, ...action.payload.product.changes })
+        this.service.save(product)
       ),
       map(
         (product: Product) => new UpdateProductSuccess({ product: product }),
