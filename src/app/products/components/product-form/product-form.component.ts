@@ -21,7 +21,8 @@ import { AppValidators } from '@core/validators/app.validator';
 export class ProductFormComponent implements OnChanges, OnDestroy {
   formGroup: FormGroup;
   @Input() product: Product;
-  @Output() productChange = new EventEmitter<Product>();
+  @Input() showErrors: boolean;
+  @Output() productChange = new EventEmitter<{ product: Product, valid: boolean }>();
 
   private alive = true;
 
@@ -47,10 +48,7 @@ export class ProductFormComponent implements OnChanges, OnDestroy {
     this.formGroup.valueChanges
       .pipe(takeWhile(() => this.alive), skip(1), debounceTime(500))
       .subscribe(value => {
-        if (!this.formGroup.valid) {
-          return;
-        }
-        this.productChange.emit(value);
+        this.productChange.emit({ product: value, valid: this.formGroup.valid });
       });
   }
 }

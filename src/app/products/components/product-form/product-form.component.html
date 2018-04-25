@@ -4,13 +4,16 @@
       <mat-form-field>
         <input matInput type="text" placeholder="Product Name" formControlName="name">
       </mat-form-field>
+      <mat-error *ngIf="showErrors && formGroup.get('name').hasError('required')">
+        Name is required
+      </mat-error>
       <mat-form-field>
         <input matInput type="text" placeholder="Product Price" formControlName="price">
       </mat-form-field>
-      <mat-error *ngIf="formGroup.get('price').dirty && formGroup.get('price').hasError('validateCurrency') && !formGroup.get('price').hasError('required')">
+      <mat-error *ngIf="showErrors && formGroup.get('price').hasError('validateCurrency') && !formGroup.get('price').hasError('required')">
         Please enter a valid price
       </mat-error>
-      <mat-error *ngIf="formGroup.get('price').dirty && formGroup.get('price').hasError('required')">
+      <mat-error *ngIf="showErrors && formGroup.get('price').hasError('required')">
         Price is required
       </mat-error>
     </form>

@@ -23,12 +23,14 @@ export class ProductComponent implements OnInit {
   product$: Observable<Product>;
 
   private product: Product;
+  private valid: boolean;
+  private showErrors: boolean;
 
   constructor(
     private router: Router,
     private store: Store<AppState>,
     private activatedRoute: ActivatedRoute
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.product$ = this.activatedRoute.paramMap.pipe(
@@ -37,17 +39,24 @@ export class ProductComponent implements OnInit {
       tap(id => this.store.dispatch(new LoadProduct({ id: +id }))),
       switchMap(() => this.store.pipe(select(fromStore.getSelectedProduct)))
     );
+
+    this.showErrors = false;
   }
 
-  onProductChange(product: Product) {
-    this.product = product;
+  onProductChange(value: { product: Product, valid: boolean }) {
+    this.product = value.product;
+    this.valid = value.valid;
   }
 
   onSave() {
-    if (this.product.id) {
-      this.updateProduct(this.product);
-    } else {
-      this.addProduct(this.product);
+    this.showErrors = true;
+
+    if (this.valid) {
+      if (this.product.id) {
+        this.updateProduct(this.product);
+      } else {
+        this.addProduct(this.product);
+      }
     }
   }
 
