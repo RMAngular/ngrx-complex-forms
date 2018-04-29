@@ -3,7 +3,13 @@ import { Actions, Effect } from '@ngrx/effects';
 import { Action, Store, select } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import { forkJoin } from 'rxjs/observable/forkJoin';
-import { map, switchMap, catchError, mergeMap, withLatestFrom } from 'rxjs/operators';
+import {
+  map,
+  switchMap,
+  catchError,
+  mergeMap,
+  withLatestFrom
+} from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
 
 import { LineItem } from './line-item.model';
@@ -31,9 +37,9 @@ export class LineItemEffects {
       switchMap(() => this.service.getLineItems()),
       map(
         (lineItems: LineItem[]) =>
-          new LoadLineItemsSuccess({ lineItems: lineItems }),
-        catchError(err => of(new LoadLineItemsFail()))
-      )
+          new LoadLineItemsSuccess({ lineItems: lineItems })
+      ),
+      catchError(err => of(new LoadLineItemsFail()))
     );
 
   @Effect()
@@ -42,9 +48,9 @@ export class LineItemEffects {
     .pipe(
       switchMap(action => this.service.getLineItem(action.payload.id)),
       map(
-        (lineItem: LineItem) => new LoadLineItemSuccess({ lineItem: lineItem }),
-        catchError(err => of(new LoadLineItemFail()))
-      )
+        (lineItem: LineItem) => new LoadLineItemSuccess({ lineItem: lineItem })
+      ),
+      catchError(err => of(new LoadLineItemFail()))
     );
 
   @Effect()
@@ -53,19 +59,18 @@ export class LineItemEffects {
     .pipe(
       withLatestFrom(this.store.pipe(select(fromStore.getOrderLineItems))),
       mergeMap(([action, lineItems]) =>
-        forkJoin(
-          lineItems.map(lineItem =>
-            this.service.save(lineItem)
-          )
-        )
+        forkJoin(lineItems.map(lineItem => this.service.save(lineItem)))
       ),
       map(
         (lineItems: LineItem[]) =>
-          new UpsertLineItemsSuccess({ lineItems: lineItems }),
-        catchError(err => of(new UpsertLineItemsFail()))
-      )
+          new UpsertLineItemsSuccess({ lineItems: lineItems })
+      ),
+      catchError(err => of(new UpsertLineItemsFail()))
     );
 
-  constructor(private actions$: Actions, private service: LineItemService,
-    private store: Store<AppState>) { }
+  constructor(
+    private actions$: Actions,
+    private service: LineItemService,
+    private store: Store<AppState>
+  ) {}
 }

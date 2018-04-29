@@ -41,10 +41,8 @@ export class ProductEffects {
     .ofType<AddProduct>(ProductActionTypes.AddProduct)
     .pipe(
       switchMap(action => this.service.save(action.payload.product)),
-      map(
-        (product: Product) => new AddProductSuccess({ product: product }),
-        catchError(err => of(new AddProductFail()))
-      )
+      map((product: Product) => new AddProductSuccess({ product: product })),
+      catchError(err => of(new AddProductFail()))
     );
 
   @Effect({
@@ -59,10 +57,8 @@ export class ProductEffects {
     .ofType<DeleteProduct>(ProductActionTypes.DeleteProduct)
     .pipe(
       switchMap(action => this.service.delete(action.payload.product)),
-      map(
-        (product: Product) => new DeleteProductSuccess({ product: product }),
-        catchError(err => of(new DeleteProductFail()))
-      )
+      map((product: Product) => new DeleteProductSuccess({ product: product })),
+      catchError(err => of(new DeleteProductFail()))
     );
 
   @Effect()
@@ -71,10 +67,9 @@ export class ProductEffects {
     .pipe(
       switchMap(() => this.service.getProducts()),
       map(
-        (products: Product[]) =>
-          new LoadProductsSuccess({ products: products }),
-        catchError(err => of(new LoadProductsFail()))
-      )
+        (products: Product[]) => new LoadProductsSuccess({ products: products })
+      ),
+      catchError(err => of(new LoadProductsFail()))
     );
 
   @Effect()
@@ -82,10 +77,8 @@ export class ProductEffects {
     .ofType<LoadProduct>(ProductActionTypes.LoadProduct)
     .pipe(
       switchMap(action => this.service.getProduct(action.payload.id)),
-      map(
-        (product: Product) => new LoadProductSuccess({ product: product }),
-        catchError(err => of(new LoadProductFail()))
-      )
+      map((product: Product) => new LoadProductSuccess({ product: product })),
+      catchError(err => of(new LoadProductFail()))
     );
 
   @Effect()
@@ -93,13 +86,9 @@ export class ProductEffects {
     .ofType<UpdateProduct>(ProductActionTypes.UpdateProduct)
     .pipe(
       withLatestFrom(this.store.pipe(select(fromStore.getSelectedProduct))),
-      switchMap(([action, product]) =>
-        this.service.save(product)
-      ),
-      map(
-        (product: Product) => new UpdateProductSuccess({ product: product }),
-        catchError(err => of(new UpdateProductFail()))
-      )
+      switchMap(([action, product]) => this.service.save(product)),
+      map((product: Product) => new UpdateProductSuccess({ product: product })),
+      catchError(err => of(new UpdateProductFail()))
     );
 
   constructor(

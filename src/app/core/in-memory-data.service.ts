@@ -14,7 +14,7 @@ export class InMemoryDataService {
 
     const products = [
       { id: 1, name: 'Toothpaste', price: 3.57 } as Product,
-      { id: 2, name: 'Deoderant', price: 2.5 } as Product,
+      { id: 2, name: 'Deodorant', price: 2.5 } as Product,
       { id: 3, name: 'Hairspray', price: 1.99 } as Product,
       { id: 4, name: 'Shaving Cream', price: 4.25 } as Product
     ];

@@ -50,10 +50,8 @@ export class OrderEffects {
     .ofType(OrderActionTypes.LoadOrders)
     .pipe(
       switchMap(() => this.service.getOrders()),
-      map(
-        (orders: Order[]) => new LoadOrdersSuccess({ orders: orders }),
-        catchError(err => of(new LoadOrdersFail()))
-      )
+      map((orders: Order[]) => new LoadOrdersSuccess({ orders: orders })),
+      catchError(err => of(new LoadOrdersFail()))
     );
 
   @Effect()
@@ -61,10 +59,8 @@ export class OrderEffects {
     .ofType<LoadOrder>(OrderActionTypes.LoadOrder)
     .pipe(
       switchMap(action => this.service.getOrder(action.payload.id)),
-      map(
-        (order: Order) => new LoadOrderSuccess({ order: order }),
-        catchError(err => of(new LoadOrderFail()))
-      )
+      map((order: Order) => new LoadOrderSuccess({ order: order })),
+      catchError(err => of(new LoadOrderFail()))
     );
 
   @Effect()
@@ -72,18 +68,14 @@ export class OrderEffects {
     .ofType<UpdateOrder>(OrderActionTypes.UpdateOrder)
     .pipe(
       withLatestFrom(this.store.pipe(select(fromStore.getSelectedOrder))),
-      switchMap(([action, order]) =>
-        this.service.save(order)
-      ),
-      map(
-        (order: Order) => new UpdateOrderSuccess({ order: order }),
-        catchError(err => of(new UpdateOrderFail()))
-      )
+      switchMap(([action, order]) => this.service.save(order)),
+      map((order: Order) => new UpdateOrderSuccess({ order: order })),
+      catchError(err => of(new UpdateOrderFail()))
     );
 
   constructor(
     private actions$: Actions,
     private service: OrderService,
     private store: Store<AppState>
-  ) { }
+  ) {}
 }
