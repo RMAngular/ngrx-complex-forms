@@ -26,9 +26,9 @@ export class CustomerEffects {
       switchMap(() => this.service.getCustomers()),
       map(
         (customers: Customer[]) =>
-          new LoadCustomersSuccess({ customers: customers }),
-        catchError(err => of(new LoadCustomersFail()))
-      )
+          new LoadCustomersSuccess({ customers: customers })
+      ),
+      catchError(err => of(new LoadCustomersFail()))
     );
 
   @Effect()
@@ -37,9 +37,9 @@ export class CustomerEffects {
     .pipe(
       switchMap(action => this.service.getCustomer(action.payload.id)),
       map(
-        (customer: Customer) => new LoadCustomerSuccess({ customer: customer }),
-        catchError(err => of(new LoadCustomerFail()))
-      )
+        (customer: Customer) => new LoadCustomerSuccess({ customer: customer })
+      ),
+      catchError(err => of(new LoadCustomerFail()))
     );
 
   constructor(private actions$: Actions, private service: CustomerService) {}
