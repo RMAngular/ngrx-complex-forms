@@ -1,19 +1,10 @@
-import {
-  Component,
-  EventEmitter,
-  Input,
-  OnChanges,
-  OnDestroy,
-  Output,
-  SimpleChanges,
-  ViewChild
-} from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnDestroy, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatTable } from '@angular/material';
-import { debounceTime, takeWhile } from 'rxjs/operators';
-
 import { LineItem } from '@state/line-item/line-item.model';
 import { Product } from '@state/product/product.model';
+import { Subject } from 'rxjs/Subject';
+import { debounceTime, takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-lineitems-table',
@@ -33,14 +24,15 @@ export class LineitemsTableComponent implements OnDestroy, OnChanges {
     return this.formGroup.get('lineItems') as FormArray;
   }
 
-  private alive = true;
+  private destroyed$ = new Subject<void>();
 
   constructor(private formBuilder: FormBuilder) {
     this.buildForm();
   }
 
   ngOnDestroy() {
-    this.alive = false;
+    this.destroyed$.next();
+    this.destroyed$.complete();
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -64,18 +56,15 @@ export class LineitemsTableComponent implements OnDestroy, OnChanges {
     const productId = +lineItem.get('productId').value;
     const quantity = +lineItem.get('quantity').value;
 
-    //verify productId and quantity
+    // verify productId and quantity
     if (!productId || !quantity) {
       return 0;
     }
 
     // find product
-    const product = this.products.find(product => product.id === productId);
-    if (product === undefined) {
-      return 0;
-    }
+    const data = this.products.find(product => product.id === productId);
 
-    return product.price * quantity;
+    return data ? data.price * quantity : 0;
   }
 
   onAddLineItemClick() {
@@ -99,20 +88,18 @@ export class LineitemsTableComponent implements OnDestroy, OnChanges {
     this.formGroup = this.formBuilder.group({
       lineItems: this.formBuilder.array([])
     });
-    this.formGroup.valueChanges
-      .pipe(takeWhile(() => this.alive), debounceTime(500))
-      .subscribe(value => {
-        if (!this.formGroup.valid) {
-          return;
-        }
-        const lineItems: LineItem[] = value.lineItems.map(lineItem => {
-          return {
-            ...lineItem,
-            quantity: +lineItem.quantity
-          };
-        });
-        this.lineItemsChange.emit(lineItems);
+    this.formGroup.valueChanges.pipe(takeUntil(this.destroyed$), debounceTime(500)).subscribe(value => {
+      if (!this.formGroup.valid) {
+        return;
+      }
+      const lineItems: LineItem[] = value.lineItems.map(lineItem => {
+        return {
+          ...lineItem,
+          quantity: +lineItem.quantity
+        };
       });
+      this.lineItemsChange.emit(lineItems);
+    });
   }
 
   private getLineItemFormGroup(lineItem?: LineItem): FormGroup {
@@ -134,10 +121,10 @@ export class LineitemsTableComponent implements OnDestroy, OnChanges {
   }
 
   private removeLineItemFormGroups() {
-    while (this.lineItemsFormArray.controls.length > 0)
-      this.lineItemsFormArray.removeAt(
-        this.lineItemsFormArray.controls.length - 1
-      );
+    while (this.lineItemsFormArray.controls.length > 0) {
+      this.lineItemsFormArray.removeAt(this.lineItemsFormArray.controls.length - 1);
+    }
+
     this.matTable.renderRows();
   }
 }

@@ -16,9 +16,9 @@ export class OrdersTableComponent implements OnInit {
   @Output() delete = new EventEmitter<Order>();
   @Output() edit = new EventEmitter<Order>();
 
-  constructor() {}
+  constructor() { }
 
-  ngOnInit() {}
+  ngOnInit() { }
 
   computeOrderTotal(orderView: OrderView): number {
     if (!orderView.lineItems.length) {
@@ -29,8 +29,8 @@ export class OrdersTableComponent implements OnInit {
     return orderView.lineItems
       .map(lineItem => {
         const p = orderView.products.find(
-            product => product.id === lineItem.productId
-          ),
+          product => product.id === lineItem.productId
+        ),
           price = p.price;
 
         return lineItem.quantity * price;
@@ -39,10 +39,11 @@ export class OrdersTableComponent implements OnInit {
   }
 
   getProductPrice(orderView: OrderView, id: number) {
-    const product = orderView.products.find(
+    const data = orderView.products.find(
       (product: Product) => product.id === id
     );
-    return product.price;
+
+    return data.price;
   }
 
   onDeleteOrder(order: Order) {

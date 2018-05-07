@@ -1,26 +1,11 @@
-import {
-  Component,
-  EventEmitter,
-  Input,
-  OnChanges,
-  OnDestroy,
-  Output,
-  SimpleChanges
-} from '@angular/core';
-import {
-  FormGroup,
-  FormBuilder,
-  FormArray,
-  Validators,
-  FormControl
-} from '@angular/forms';
-import { Observable } from 'rxjs/Observable';
-import { debounceTime, takeWhile } from 'rxjs/operators';
-
-import { Order } from '@state/order/order.model';
+import { Component, EventEmitter, Input, OnChanges, OnDestroy, Output, SimpleChanges } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Customer } from '@state/customer/customer.model';
 import { LineItem } from '@state/line-item/line-item.model';
+import { Order } from '@state/order/order.model';
 import { Product } from '@state/product/product.model';
+import { Subject } from 'rxjs/Subject';
+import { debounceTime, skip, takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-order-form',
@@ -50,7 +35,7 @@ export class OrderFormComponent implements OnChanges, OnDestroy {
   @Output() lineItemsChange = new EventEmitter<LineItem[]>();
   @Output() orderChange = new EventEmitter<Order>();
 
-  private alive = true;
+  private destroyed$ = new Subject<void>();
   private _customer: Customer;
   private _lineItems: LineItem[];
 
@@ -88,7 +73,8 @@ export class OrderFormComponent implements OnChanges, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.alive = false;
+    this.destroyed$.next();
+    this.destroyed$.complete();
   }
 
   private buildForm() {
@@ -97,17 +83,17 @@ export class OrderFormComponent implements OnChanges, OnDestroy {
       customerId: [0, Validators.required],
       lineItemIds: [[], Validators.required]
     });
-    this.formGroup.valueChanges
-      .pipe(takeWhile(() => this.alive), debounceTime(500))
-      .subscribe(value => {
-        if (!this.formGroup.valid) {
-          return;
-        }
-        if (this.order && this.lineItems) {
-          this.order.lineItemIds = this.lineItems.map(lineItem => lineItem.id);
-        }
-        this.lineItemsChange.emit(this.lineItems);
-        this.orderChange.emit(this.order);
-      });
+
+    this.formGroup.valueChanges.pipe(takeUntil(this.destroyed$), skip(1), debounceTime(500)).subscribe(value => {
+      console.log('order changes:', value);
+      if (!this.formGroup.valid) {
+        return;
+      }
+      if (this.order && this.lineItems) {
+        this.order.lineItemIds = this.lineItems.map(lineItem => lineItem.id);
+      }
+      this.lineItemsChange.emit(this.lineItems);
+      this.orderChange.emit(this.order);
+    });
   }
 }
