@@ -1,17 +1,9 @@
-import {
-  Component,
-  EventEmitter,
-  Input,
-  OnChanges,
-  OnDestroy,
-  OnInit,
-  Output
-} from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { Observable } from 'rxjs/Observable';
-import { debounceTime, map, takeWhile } from 'rxjs/operators';
-
 import { Customer } from '@state/customer/customer.model';
+import { Observable } from 'rxjs/Observable';
+import { Subject } from 'rxjs/Subject';
+import { debounceTime, map, takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-customer',
@@ -25,7 +17,7 @@ export class CustomerComponent implements OnChanges, OnDestroy, OnInit {
   @Input() customers: Customer[];
   @Output() customerChange = new EventEmitter<Customer>();
 
-  private alive = true;
+  private destroyed$ = new Subject<void>();
 
   constructor() {
     this.buildForm();
@@ -38,7 +30,8 @@ export class CustomerComponent implements OnChanges, OnDestroy, OnInit {
   }
 
   ngOnDestroy() {
-    this.alive = false;
+    this.destroyed$.next();
+    this.destroyed$.complete();
   }
 
   ngOnInit() {
@@ -55,31 +48,23 @@ export class CustomerComponent implements OnChanges, OnDestroy, OnInit {
     if (this.customers === undefined) {
       return '';
     }
-    const customer = this.customers.find(customer => customer.id === id);
-    if (customer === undefined) {
-      return '';
-    }
-    return `${customer.firstName} ${customer.lastName}`;
+    const data = this.customers.find(customer => customer.id === id);
+    return data ? `${data.firstName} ${data.lastName}` : '';
   }
 
   filterCustomers(name: string): Customer[] {
     const regex = new RegExp(`^${name}.*`, 'i');
-    return this.customers.filter(
-      customer =>
-        regex.test(customer.firstName) || regex.test(customer.lastName)
-    );
+    return this.customers.filter(customer => regex.test(customer.firstName) || regex.test(customer.lastName));
   }
 
   private buildForm() {
     this.customerFormControl = new FormControl();
-    this.customerFormControl.valueChanges
-      .pipe(takeWhile(() => this.alive), debounceTime(250))
-      .subscribe(value => {
-        if (this.customerFormControl.invalid) {
-          return;
-        }
-        const customer = this.customers.find(customer => customer.id === value);
-        this.customerChange.emit(customer);
-      });
+    this.customerFormControl.valueChanges.pipe(takeUntil(this.destroyed$), debounceTime(250)).subscribe(value => {
+      if (this.customerFormControl.invalid) {
+        return;
+      }
+      const data = this.customers.find(customer => customer.id === value);
+      this.customerChange.emit(data);
+    });
   }
 }

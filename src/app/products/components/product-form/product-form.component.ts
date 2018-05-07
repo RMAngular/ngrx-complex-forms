@@ -1,17 +1,9 @@
-import {
-  Component,
-  EventEmitter,
-  Input,
-  OnChanges,
-  OnDestroy,
-  Output,
-  SimpleChanges
-} from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { debounceTime, takeWhile, skip } from 'rxjs/operators';
-
-import { Product } from '@state/product/product.model';
+import { Component, EventEmitter, Input, OnChanges, OnDestroy, Output, SimpleChanges } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AppValidators } from '@core/validators/app.validator';
+import { Product } from '@state/product/product.model';
+import { Subject } from 'rxjs/Subject';
+import { debounceTime, skip, takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-product-form',
@@ -22,9 +14,9 @@ export class ProductFormComponent implements OnChanges, OnDestroy {
   formGroup: FormGroup;
   @Input() product: Product;
   @Input() showErrors: boolean;
-  @Output() productChange = new EventEmitter<{ product: Product, valid: boolean }>();
+  @Output() productChange = new EventEmitter<{ product: Product; valid: boolean }>();
 
-  private alive = true;
+  private destroyed$ = new Subject<void>();
 
   constructor(private formBuilder: FormBuilder) {
     this.buildForm();
@@ -37,7 +29,8 @@ export class ProductFormComponent implements OnChanges, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.alive = false;
+    this.destroyed$.next();
+    this.destroyed$.complete();
   }
 
   private buildForm() {
@@ -45,10 +38,13 @@ export class ProductFormComponent implements OnChanges, OnDestroy {
       name: ['', Validators.required],
       price: ['', Validators.required, AppValidators.validateCurrency]
     });
-    this.formGroup.valueChanges
-      .pipe(takeWhile(() => this.alive), skip(1), debounceTime(500))
-      .subscribe(value => {
-        this.productChange.emit({ product: value, valid: this.formGroup.valid });
+
+    this.formGroup.valueChanges.pipe(takeUntil(this.destroyed$), skip(1), debounceTime(500)).subscribe(value => {
+      console.log('product changes', value);
+      this.productChange.emit({
+        product: value,
+        valid: this.formGroup.valid
       });
+    });
   }
 }

@@ -1,34 +1,23 @@
-import { getOrderLineItems } from './../../../state/line-item/index';
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Store, select } from '@ngrx/store';
-import { Observable } from 'rxjs/Observable';
-import {
-  filter,
-  map,
-  skipWhile,
-  switchMap,
-  takeWhile,
-  tap
-} from 'rxjs/operators';
-import { clone } from 'ramda';
-
-import * as fromStore from '@state/order/order.reducer';
 import * as fromCustomerStore from '@state/customer';
-import * as fromLineItemStore from '@state/line-item';
-import * as fromProductStore from '@state/product';
-import { getSelectedOrder } from '@state/order';
-import { LoadCustomer, LoadCustomers } from '@state/customer/customer.actions';
-import {
-  LoadLineItems,
-  UpsertLineItems
-} from '@state/line-item/line-item.actions';
-import { LoadOrder, UpdateOrder } from '@state/order/order.actions';
-import { LoadProducts } from '@state/product/product.actions';
-import { Order } from '@state/order/order.model';
+import { LoadCustomers } from '@state/customer/customer.actions';
 import { Customer } from '@state/customer/customer.model';
+import * as fromLineItemStore from '@state/line-item';
+import { LoadLineItems, UpsertLineItems } from '@state/line-item/line-item.actions';
 import { LineItem } from '@state/line-item/line-item.model';
+import { getSelectedOrder } from '@state/order';
+import { LoadOrder, UpdateOrder } from '@state/order/order.actions';
+import { Order } from '@state/order/order.model';
+import * as fromStore from '@state/order/order.reducer';
+import * as fromProductStore from '@state/product';
+import { LoadProducts } from '@state/product/product.actions';
 import { Product } from '@state/product/product.model';
+import { clone } from 'ramda';
+import { Observable } from 'rxjs/Observable';
+import { Subject } from 'rxjs/Subject';
+import { filter, map, switchMap, tap } from 'rxjs/operators';
 
 @Component({
   templateUrl: './order.component.html',
@@ -41,17 +30,15 @@ export class OrderComponent implements OnDestroy, OnInit {
   lineItems$: Observable<LineItem[]>;
   products$: Observable<Product[]>;
 
-  private alive = true;
+  private destroyed$ = new Subject<void>();
   private lineItems: LineItem[];
   private order: Order;
 
-  constructor(
-    private activatedRoute: ActivatedRoute,
-    private store: Store<fromStore.State>
-  ) {}
+  constructor(private activatedRoute: ActivatedRoute, private store: Store<fromStore.State>) {}
 
   ngOnDestroy() {
-    this.alive = false;
+    this.destroyed$.next();
+    this.destroyed$.complete();
   }
 
   ngOnInit() {
@@ -65,20 +52,13 @@ export class OrderComponent implements OnDestroy, OnInit {
 
     // get all customers
     this.store.dispatch(new LoadCustomers());
-    this.customers$ = this.store.pipe(
-      select(fromCustomerStore.getAllCustomers)
-    );
+    this.customers$ = this.store.pipe(select(fromCustomerStore.getAllCustomers));
 
-    this.customer$ = this.store.pipe(
-      select(fromCustomerStore.getCustomerBySelectedOrder)
-    );
+    this.customer$ = this.store.pipe(select(fromCustomerStore.getCustomerBySelectedOrder));
 
     // get all line items
     this.store.dispatch(new LoadLineItems());
-    this.lineItems$ = this.store.pipe(
-      select(fromLineItemStore.getOrderLineItems),
-      map(lineItems => clone(lineItems))
-    );
+    this.lineItems$ = this.store.pipe(select(fromLineItemStore.getOrderLineItems), map(lineItems => clone(lineItems)));
 
     // get all products
     this.store.dispatch(new LoadProducts());

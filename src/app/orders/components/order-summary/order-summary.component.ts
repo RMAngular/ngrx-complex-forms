@@ -27,13 +27,11 @@ export class OrderSummaryComponent implements OnInit {
         if (!lineItem.quantity) {
           return 0;
         }
-        const product = this.products.find(
+        const data = this.products.find(
           product => product.id === lineItem.productId
         );
-        if (product === undefined) {
-          return 0;
-        }
-        return lineItem.quantity * product.price;
+
+        return data ? lineItem.quantity * data.price : 0;
       })
       .reduce((prev, current) => prev + current);
   }
