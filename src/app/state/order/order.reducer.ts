@@ -1,6 +1,6 @@
-import { EntityState, EntityAdapter, createEntityAdapter } from '@ngrx/entity';
+import { EntityAdapter, EntityState, createEntityAdapter } from '@ngrx/entity';
+import { OrderActionTypes, OrderActions } from './order.actions';
 import { Order } from './order.model';
-import { OrderActions, OrderActionTypes } from './order.actions';
 
 export interface State extends EntityState<Order> {
   // additional entities state properties
@@ -20,59 +20,20 @@ export const initialState: State = adapter.getInitialState({
 
 export function reducer(state = initialState, action: OrderActions): State {
   switch (action.type) {
-    case OrderActionTypes.AddOrder: {
+    case OrderActionTypes.AddOrderSuccess: {
       return adapter.addOne(action.payload.order, state);
     }
 
-    case OrderActionTypes.UpsertOrder: {
-      return adapter.upsertOne(action.payload.order, state);
+    case OrderActionTypes.ClearSelectedOrder: {
+      return { ...state, selectedOrderId: null };
     }
 
-    case OrderActionTypes.AddOrders: {
-      return adapter.addMany(action.payload.orders, state);
-    }
-
-    case OrderActionTypes.UpsertOrders: {
-      return adapter.upsertMany(action.payload.orders, state);
-    }
-
-    case OrderActionTypes.UpdateOrder: {
-      return adapter.updateOne(action.payload.order, state);
-    }
-
-    case OrderActionTypes.UpdateOrders: {
-      return adapter.updateMany(action.payload.orders, state);
-    }
-
-    case OrderActionTypes.DeleteOrder: {
+    case OrderActionTypes.DeleteOrderSuccess: {
       return adapter.removeOne(action.payload.id, state);
     }
 
-    case OrderActionTypes.DeleteOrders: {
-      return adapter.removeMany(action.payload.ids, state);
-    }
-
-    case OrderActionTypes.LoadOrders: {
-      return {
-        ...adapter.removeAll(state),
-        loading: true,
-        error: ''
-      };
-    }
-
-    case OrderActionTypes.LoadOrdersSuccess: {
-      return {
-        ...adapter.addAll(action.payload.orders, state),
-        loading: false
-      };
-    }
-
-    case OrderActionTypes.LoadOrdersFail: {
-      return {
-        ...state,
-        loading: false,
-        error: 'error loading orders'
-      };
+    case OrderActionTypes.UpdateOrderSuccess: {
+      return adapter.updateOne(action.payload.order, state);
     }
 
     case OrderActionTypes.LoadOrder: {
@@ -99,15 +60,34 @@ export function reducer(state = initialState, action: OrderActions): State {
       };
     }
 
+    case OrderActionTypes.LoadOrders: {
+      return {
+        ...adapter.removeAll(state),
+        loading: true,
+        error: ''
+      };
+    }
+
+    case OrderActionTypes.LoadOrdersSuccess: {
+      return {
+        ...adapter.addAll(action.payload.orders, state),
+        loading: false
+      };
+    }
+
+    case OrderActionTypes.LoadOrdersFail: {
+      return {
+        ...state,
+        loading: false,
+        error: 'error loading orders'
+      };
+    }
+
     case OrderActionTypes.SelectOrder: {
       return {
         ...state,
         selectedOrderId: action.payload.order.id
       };
-    }
-
-    case OrderActionTypes.ClearOrders: {
-      return adapter.removeAll(state);
     }
 
     default: {

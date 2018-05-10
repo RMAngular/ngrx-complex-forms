@@ -1,27 +1,85 @@
-import { Action } from '@ngrx/store';
+import { Validation } from '@core/interfaces/validation';
 import { Update } from '@ngrx/entity';
+import { Action } from '@ngrx/store';
+import { LineItem } from '@state/line-item/line-item.model';
 import { Order } from './order.model';
 
 export enum OrderActionTypes {
+  AddOrder = '[Order] Add Order',
+  AddOrderSuccess = '[Order] Add Order Success',
+  AddOrderFail = '[Order] Add Order Fail',
+  ClearSelectedOrder = '[Order] Clear Selected Order',
+  DeleteOrder = '[Order] Delete Order',
+  DeleteOrderSuccess = '[Order] Delete Order Success',
+  DeleteOrderFail = '[Order] Delete Order Fail',
+  LoadOrder = '[Order] Load Order',
+  LoadOrderSuccess = '[Order] Load Order Success',
+  LoadOrderFail = '[Order] Load Order Fail',
   LoadOrdersView = '[Order] Load Orders View',
   LoadOrders = '[Order] Load Orders',
   LoadOrdersSuccess = '[Order] Load Orders Success',
   LoadOrdersFail = '[Order] Load Orders Fail',
-  LoadOrder = '[Order] Load Order',
-  LoadOrderSuccess = '[Order] Load Order Success',
-  LoadOrderFail = '[Order] Load Order Fail',
-  AddOrder = '[Order] Add Order',
   SelectOrder = '[Order] Select Order',
-  UpsertOrder = '[Order] Upsert Order',
-  AddOrders = '[Order] Add Orders',
-  UpsertOrders = '[Order] Upsert Orders',
   UpdateOrder = '[Order] Update Order',
   UpdateOrderSuccess = '[Order] Update Order Success',
   UpdateOrderFail = '[Order] Update Order Fail',
-  UpdateOrders = '[Order] Update Orders',
-  DeleteOrder = '[Order] Delete Order',
-  DeleteOrders = '[Order] Delete Orders',
-  ClearOrders = '[Order] Clear Orders'
+  UpdateLineItemsAndOrder = '[Order] Update LineItems and Order',
+  UpdateLineItemsAndOrderSuccess = '[Order] Update LineItems and Order Success',
+  UpdateLineItemsAndOrderFail = '[Order] Update LineItems and Order Fail',
+  OpenOrderValidationDialog = '[Order] Open order validation dialog',
+  CloseOrderValidationDialog = '[Order] Close order validation dialog'
+}
+
+export class AddOrder implements Action {
+  readonly type = OrderActionTypes.AddOrder;
+
+  constructor(public payload: { lineItems: LineItem[]; order: Order }) {}
+}
+
+export class AddOrderSuccess implements Action {
+  readonly type = OrderActionTypes.AddOrderSuccess;
+
+  constructor(public payload: { lineItems: LineItem[]; order: Order }) {}
+}
+
+export class AddOrderFail implements Action {
+  readonly type = OrderActionTypes.AddOrderFail;
+}
+
+export class ClearSelectedOrder implements Action {
+  readonly type = OrderActionTypes.ClearSelectedOrder;
+}
+
+export class DeleteOrder implements Action {
+  readonly type = OrderActionTypes.DeleteOrder;
+
+  constructor(public payload: { id: number }) {}
+}
+
+export class DeleteOrderSuccess implements Action {
+  readonly type = OrderActionTypes.DeleteOrderSuccess;
+
+  constructor(public payload: { id: number }) {}
+}
+
+export class DeleteOrderFail implements Action {
+  readonly type = OrderActionTypes.DeleteOrderFail;
+}
+
+export class LoadOrder implements Action {
+  readonly type = OrderActionTypes.LoadOrder;
+
+  constructor(public payload: { id: number }) {}
+}
+
+export class LoadOrderSuccess implements Action {
+  readonly type = OrderActionTypes.LoadOrderSuccess;
+
+  constructor(public payload: { order: Order }) {}
+}
+
+export class LoadOrderFail implements Action {
+  readonly type = OrderActionTypes.LoadOrderFail;
 }
 
 export class LoadOrdersView implements Action {
@@ -42,56 +100,16 @@ export class LoadOrdersFail implements Action {
   readonly type = OrderActionTypes.LoadOrdersFail;
 }
 
-export class LoadOrder implements Action {
-  readonly type = OrderActionTypes.LoadOrder;
-
-  constructor(public payload: { id: number }) {}
-}
-
-export class LoadOrderSuccess implements Action {
-  readonly type = OrderActionTypes.LoadOrderSuccess;
-
-  constructor(public payload: { order: Order }) {}
-}
-
-export class LoadOrderFail implements Action {
-  readonly type = OrderActionTypes.LoadOrderFail;
-}
-
 export class SelectOrder implements Action {
   readonly type = OrderActionTypes.SelectOrder;
 
   constructor(public payload: { order: Order }) {}
 }
 
-export class AddOrder implements Action {
-  readonly type = OrderActionTypes.AddOrder;
-
-  constructor(public payload: { order: Order }) {}
-}
-
-export class UpsertOrder implements Action {
-  readonly type = OrderActionTypes.UpsertOrder;
-
-  constructor(public payload: { order: Update<Order> }) {}
-}
-
-export class AddOrders implements Action {
-  readonly type = OrderActionTypes.AddOrders;
-
-  constructor(public payload: { orders: Order[] }) {}
-}
-
-export class UpsertOrders implements Action {
-  readonly type = OrderActionTypes.UpsertOrders;
-
-  constructor(public payload: { orders: Update<Order>[] }) {}
-}
-
 export class UpdateOrder implements Action {
   readonly type = OrderActionTypes.UpdateOrder;
 
-  constructor(public payload: { order: Update<Order> }) {}
+  constructor(public payload: { order: Order }) {}
 }
 
 export class UpdateOrderFail implements Action {
@@ -101,47 +119,57 @@ export class UpdateOrderFail implements Action {
 export class UpdateOrderSuccess implements Action {
   readonly type = OrderActionTypes.UpdateOrderSuccess;
 
-  constructor(public payload: { order: Order }) {}
+  constructor(public payload: { order: Update<Order> }) {}
 }
 
-export class UpdateOrders implements Action {
-  readonly type = OrderActionTypes.UpdateOrders;
+export class UpdateLineItemsAndOrder implements Action {
+  readonly type = OrderActionTypes.UpdateLineItemsAndOrder;
 
-  constructor(public payload: { orders: Update<Order>[] }) {}
+  constructor(public payload: { lineItems: LineItem[]; order: Order }) {}
 }
 
-export class DeleteOrder implements Action {
-  readonly type = OrderActionTypes.DeleteOrder;
+export class UpdateLineItemsAndOrderSuccess implements Action {
+  readonly type = OrderActionTypes.UpdateLineItemsAndOrderSuccess;
 
-  constructor(public payload: { id: number }) {}
+  constructor(public payload: { lineItems: LineItem[]; order: Order }) {}
 }
 
-export class DeleteOrders implements Action {
-  readonly type = OrderActionTypes.DeleteOrders;
+export class UpdateLineItemsAndOrderFail implements Action {
+  readonly type = OrderActionTypes.UpdateLineItemsAndOrderFail;
 
-  constructor(public payload: { ids: number[] }) {}
+  constructor(public payload: { error: Error }) {}
 }
 
-export class ClearOrders implements Action {
-  readonly type = OrderActionTypes.ClearOrders;
+export class OpenOrderValidationDialog implements Action {
+  readonly type = OrderActionTypes.OpenOrderValidationDialog;
+
+  constructor(public payload: { validations: Validation[] }) {}
+}
+
+export class CloseOrderValidationDialog implements Action {
+  readonly type = OrderActionTypes.CloseOrderValidationDialog;
 }
 
 export type OrderActions =
-  | LoadOrders
-  | LoadOrdersSuccess
-  | LoadOrdersFail
+  | AddOrder
+  | AddOrderSuccess
+  | AddOrderFail
+  | ClearSelectedOrder
+  | DeleteOrder
+  | DeleteOrderSuccess
+  | DeleteOrderSuccess
   | LoadOrder
   | LoadOrderSuccess
   | LoadOrderFail
+  | LoadOrders
+  | LoadOrdersSuccess
+  | LoadOrdersFail
   | SelectOrder
-  | AddOrder
-  | UpsertOrder
-  | AddOrders
-  | UpsertOrders
   | UpdateOrder
   | UpdateOrderSuccess
   | UpdateOrderFail
-  | UpdateOrders
-  | DeleteOrder
-  | DeleteOrders
-  | ClearOrders;
+  | UpdateLineItemsAndOrder
+  | UpdateLineItemsAndOrderFail
+  | UpdateLineItemsAndOrderSuccess
+  | OpenOrderValidationDialog
+  | CloseOrderValidationDialog;

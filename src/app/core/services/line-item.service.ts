@@ -1,10 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { LineItem } from '@state/line-item/line-item.model';
 import { Observable } from 'rxjs/Observable';
 import { of } from 'rxjs/observable/of';
 import { map, switchMap } from 'rxjs/operators';
-
-import { LineItem } from '@state/line-item/line-item.model';
 
 @Injectable()
 export class LineItemService {
@@ -17,9 +16,7 @@ export class LineItemService {
   }
 
   getLineItem(id: number): Observable<LineItem> {
-    return this.getLineItems().pipe(
-      map(lineItems => lineItems.find(lineItem => lineItem.id === id))
-    );
+    return this.getLineItems().pipe(map(lineItems => lineItems.find(lineItem => lineItem.id === id)));
   }
 
   save(lineItem: LineItem): Observable<LineItem> {
@@ -29,12 +26,8 @@ export class LineItemService {
     return this.post(lineItem);
   }
 
-  delete(lineItem: LineItem): Observable<LineItem> {
-    const url = `${this.lineItemsUrl}/${lineItem.id}`;
-
-    return this.httpClient
-      .delete<void>(url)
-      .pipe(switchMap(() => of(lineItem)));
+  delete(id: number): Observable<number> {
+    return this.httpClient.delete<void>(`${this.lineItemsUrl}/${id}`).pipe(switchMap(() => of(id)));
   }
 
   // Add new LineItem
@@ -46,10 +39,8 @@ export class LineItemService {
 
   // Update existing LineItem
   private put(lineItem: LineItem): Observable<LineItem> {
-    const url = `${this.lineItemsUrl}/${lineItem.id}`;
-
     return this.httpClient
-      .put(url, lineItem)
+      .put<void>(`${this.lineItemsUrl}/${lineItem.id}`, lineItem)
       .pipe(switchMap(() => of(lineItem)));
   }
 }

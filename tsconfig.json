@@ -17,12 +17,15 @@
     ],
     "baseUrl": "./src",
     "paths": {
+      "@core/*": [
+        "app/core/*"
+      ],
+      "@shared/*": [
+        "app/shared/*"
+      ],
       "@state/*": [
         "app/state/*"
       ],
-      "@core/*": [
-        "app/core/*"
-      ]
     }
   }
 }

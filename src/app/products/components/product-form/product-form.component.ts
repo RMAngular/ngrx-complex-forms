@@ -40,7 +40,6 @@ export class ProductFormComponent implements OnChanges, OnDestroy {
     });
 
     this.formGroup.valueChanges.pipe(takeUntil(this.destroyed$), skip(1), debounceTime(500)).subscribe(value => {
-      console.log('product changes', value);
       this.productChange.emit({
         product: value,
         valid: this.formGroup.valid

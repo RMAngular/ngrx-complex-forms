@@ -1,20 +1,23 @@
 import { CommonModule } from '@angular/common';
 import { ModuleWithProviders, NgModule, Optional, SkipSelf } from '@angular/core';
+import { MatDialogModule, MatSnackBarModule } from '@angular/material';
 import { EffectsModule } from '@ngrx/effects';
 import { RouterStateSerializer, StoreRouterConnectingModule } from '@ngrx/router-store';
 import { StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { environment } from '../../environments/environment';
 import { appMetaReducers, appReducer } from './app.reducer';
-import { CustomRouterStateSerializer } from './shared/utils';
 import { CustomerEffects } from './customer/customer.effects';
-import { ProductEffects } from './product/product.effects';
-import { OrderEffects } from './order/order.effects';
 import { LineItemEffects } from './line-item/line-item.effects';
+import { OrderEffects } from './order/order.effects';
+import { ProductEffects } from './product/product.effects';
+import { CustomRouterStateSerializer } from './shared/utils';
 
 @NgModule({
   imports: [
     CommonModule,
+    MatDialogModule,
+    MatSnackBarModule,
     StoreRouterConnectingModule,
     StoreModule.forRoot(appReducer, { metaReducers: appMetaReducers }),
     EffectsModule.forRoot([CustomerEffects, ProductEffects, OrderEffects, LineItemEffects]),
@@ -22,9 +25,7 @@ import { LineItemEffects } from './line-item/line-item.effects';
   ],
   declarations: []
 })
-
 export class StateModule {
-
   static forRoot(): ModuleWithProviders {
     return {
       ngModule: StateModule,
@@ -39,10 +40,13 @@ export class StateModule {
     };
   }
 
-  constructor(@Optional() @SkipSelf() parentModule: StateModule) {
+  constructor(
+    @Optional()
+    @SkipSelf()
+    parentModule: StateModule
+  ) {
     if (parentModule) {
-      throw new Error(
-        'StateModule is already loaded. Import it in the AppModule only');
+      throw new Error('StateModule is already loaded. Import it in the AppModule only');
     }
   }
 }
