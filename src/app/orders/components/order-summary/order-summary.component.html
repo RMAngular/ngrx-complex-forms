@@ -3,7 +3,7 @@
     <div fxLayout="column" fxLayoutAlign="start stretch">
       <div fxLayout="row" fxLayoutAlign="start center">
         <div fxFlex="100px">Total</div>
-        <div fxFlex class="total">{{calculatedTotal()}}</div>
+        <div fxFlex class="total">{{calculatedTotal() | currency:'USD'}}</div>
       </div>
     </div>
   </mat-card-content>

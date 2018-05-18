@@ -1,9 +1,9 @@
-import { LineItem } from '../line-item/line-item.model';
 import { Customer } from '@state/customer/customer.model';
 import { Product } from '@state/product/product.model';
+import { LineItem } from '../line-item/line-item.model';
 
 export interface Order {
-  id: number;
+  id?: number;
   customerId: number;
   lineItemIds: number[];
 }

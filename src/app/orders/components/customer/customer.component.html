@@ -7,6 +7,9 @@
           {{customer.firstName}} {{customer.lastName}}
         </mat-option>
       </mat-autocomplete>
+      <mat-error *ngIf="customerFormControl.invalid">
+        Please enter a customer
+      </mat-error>
     </mat-form-field>
   </mat-card-content>
 </mat-card>

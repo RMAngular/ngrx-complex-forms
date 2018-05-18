@@ -1,0 +1,11 @@
+<h2 mat-dialog-title>Something is not right...</h2>
+<mat-dialog-content>
+  <ul>
+    <li *ngFor="let validation of validations">
+      {{ validation.message }}
+    </li>
+  </ul>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button (click)="close()">OK</button>
+</mat-dialog-actions>

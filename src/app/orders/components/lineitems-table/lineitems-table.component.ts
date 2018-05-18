@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnChanges, OnDestroy, Output, SimpleChanges, ViewChild } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatTable } from '@angular/material';
+import { Validation } from '@core/interfaces/validation';
 import { LineItem } from '@state/line-item/line-item.model';
 import { Product } from '@state/product/product.model';
 import { Subject } from 'rxjs/Subject';
@@ -18,6 +19,8 @@ export class LineitemsTableComponent implements OnDestroy, OnChanges {
   @Input() lineItems: LineItem[];
   @Input() products: Product[];
   @Output() lineItemsChange = new EventEmitter<LineItem[]>();
+  @Output() validationChange = new EventEmitter<[AbstractControl, Validation]>();
+  @Output() validationDelete = new EventEmitter<AbstractControl>();
   @ViewChild(MatTable) private matTable: MatTable<any>;
 
   get lineItemsFormArray(): FormArray {
@@ -76,7 +79,7 @@ export class LineitemsTableComponent implements OnDestroy, OnChanges {
   }
 
   private addLineItemFormGroup(lineItem?: LineItem) {
-    this.lineItemsFormArray.push(this.getLineItemFormGroup(lineItem));
+    this.lineItemsFormArray.push(this.getLineItemFormGroup(lineItem, this.lineItemsFormArray.length + 1));
     this.matTable.renderRows();
   }
 
@@ -100,13 +103,32 @@ export class LineitemsTableComponent implements OnDestroy, OnChanges {
       });
       this.lineItemsChange.emit(lineItems);
     });
+    this.formGroup.valueChanges.pipe(takeUntil(this.destroyed$)).subscribe(() => {
+      const lineItems = this.formGroup.get('lineItems') as FormArray;
+      lineItems.controls.forEach((formGroup: FormGroup, index: number) => {
+        this.validationChange.emit([
+          formGroup.get('productId'),
+          {
+            message: `Product is required for line item #${index + 1}`,
+            valid: formGroup.get('productId').valid
+          }
+        ]);
+        this.validationChange.emit([
+          formGroup.get('quantity'),
+          {
+            message: `Quantity is required for line item #${index + 1}`,
+            valid: formGroup.get('quantity').valid
+          }
+        ]);
+      });
+    });
   }
 
-  private getLineItemFormGroup(lineItem?: LineItem): FormGroup {
+  private getLineItemFormGroup(lineItem: LineItem, index: number): FormGroup {
     return this.formBuilder.group({
-      id: [lineItem ? lineItem.id : 0],
-      productId: [lineItem ? lineItem.productId : 0, Validators.required],
-      quantity: [lineItem ? lineItem.quantity : 0, Validators.required]
+      id: [lineItem ? lineItem.id : undefined],
+      productId: [lineItem ? lineItem.productId : undefined, [Validators.required, Validators.pattern(/^[0-9]+$/)]],
+      quantity: [lineItem ? lineItem.quantity : 0, [Validators.required, Validators.min(1)]]
     });
   }
 
@@ -116,6 +138,9 @@ export class LineitemsTableComponent implements OnDestroy, OnChanges {
   }
 
   private removeLineItemFormGroupAt(i: number) {
+    const formGroup = this.lineItemsFormArray.at(i) as FormGroup;
+    this.validationDelete.emit(formGroup.get('productId'));
+    this.validationDelete.emit(formGroup.get('quantity'));
     this.lineItemsFormArray.removeAt(i);
     this.matTable.renderRows();
   }

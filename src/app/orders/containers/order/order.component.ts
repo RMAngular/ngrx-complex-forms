@@ -1,14 +1,16 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { AbstractControl } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
+import { Validation } from '@core/interfaces/validation';
 import { Store, select } from '@ngrx/store';
 import * as fromCustomerStore from '@state/customer';
 import { LoadCustomers } from '@state/customer/customer.actions';
 import { Customer } from '@state/customer/customer.model';
 import * as fromLineItemStore from '@state/line-item';
-import { LoadLineItems, UpsertLineItems } from '@state/line-item/line-item.actions';
+import { LoadLineItems } from '@state/line-item/line-item.actions';
 import { LineItem } from '@state/line-item/line-item.model';
 import { getSelectedOrder } from '@state/order';
-import { LoadOrder, UpdateOrder } from '@state/order/order.actions';
+import { AddOrder, LoadOrder, OpenOrderValidationDialog, UpdateLineItemsAndOrder } from '@state/order/order.actions';
 import { Order } from '@state/order/order.model';
 import * as fromStore from '@state/order/order.reducer';
 import * as fromProductStore from '@state/product';
@@ -33,6 +35,7 @@ export class OrderComponent implements OnDestroy, OnInit {
   private destroyed$ = new Subject<void>();
   private lineItems: LineItem[];
   private order: Order;
+  private validations: Map<AbstractControl, Validation>;
 
   constructor(private activatedRoute: ActivatedRoute, private store: Store<fromStore.State>) {}
 
@@ -73,36 +76,42 @@ export class OrderComponent implements OnDestroy, OnInit {
     this.order = order;
   }
 
+  onValidationsChange(validations: Map<AbstractControl, Validation>) {
+    this.validations = validations;
+  }
+
   save() {
-    console.log('save!', this.lineItems, this.order);
+    // validate order
+    const validations = [];
+    if (this.validations && this.validations.size) {
+      this.validations.forEach(validation => {
+        if (!validation.valid) {
+          validations.push(validation);
+        }
+      });
+    }
+    if (!this.lineItems || this.lineItems.length === 0) {
+      const validation: Validation = {
+        message: 'Orders must have at least one line item.',
+        valid: false
+      };
+      validations.push(validation);
+    }
+    if (validations.length) {
+      this.store.dispatch(new OpenOrderValidationDialog({ validations: validations }));
+      return;
+    }
 
-    // upsert each line item
-    this.store.dispatch(
-      new UpsertLineItems({
-        lineItems: this.lineItems.map(lineItem => {
-          return {
-            id: lineItem.id,
-            changes: lineItem
-          };
+    // update or add order
+    if (this.order.id) {
+      this.store.dispatch(
+        new UpdateLineItemsAndOrder({
+          lineItems: this.lineItems,
+          order: this.order
         })
-      })
-    );
-
-    // update order
-    this.store.pipe(
-      select(fromLineItemStore.getOrderLineItems),
-      map(lineItems => {
-        // console.log(lineItems);
-        this.order.lineItemIds = lineItems.map(lineItem => lineItem.id);
-        this.store.dispatch(
-          new UpdateOrder({
-            order: {
-              id: this.order.id,
-              changes: this.order
-            }
-          })
-        );
-      })
-    );
+      );
+    } else {
+      this.store.dispatch(new AddOrder({ lineItems: this.lineItems, order: this.order }));
+    }
   }
 }

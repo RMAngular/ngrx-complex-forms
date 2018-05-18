@@ -1,9 +1,7 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { NgModule } from '@angular/core';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { ReactiveFormsModule, FormsModule } from '@angular/forms';
-
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
   MatAutocompleteModule,
   MatButtonModule,
@@ -16,15 +14,15 @@ import {
   MatSelectModule,
   MatTableModule
 } from '@angular/material';
-
+import { RouterModule } from '@angular/router';
 import { CustomerComponent } from './components/customer/customer.component';
 import { LineitemsTableComponent } from './components/lineitems-table/lineitems-table.component';
-import { OrderComponent } from './containers/order/order.component';
 import { OrderDetailComponent } from './components/order-detail/order-detail.component';
 import { OrderFormComponent } from './components/order-form/order-form.component';
-import { OrdersComponent } from './containers/orders/orders.component';
-import { OrdersTableComponent } from './components/orders-table/orders-table.component';
 import { OrderSummaryComponent } from './components/order-summary/order-summary.component';
+import { OrdersTableComponent } from './components/orders-table/orders-table.component';
+import { OrderComponent } from './containers/order/order.component';
+import { OrdersComponent } from './containers/orders/orders.component';
 
 @NgModule({
   imports: [

@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnChanges, OnDestroy, Output, SimpleChanges } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Validation } from '@core/interfaces/validation';
 import { Customer } from '@state/customer/customer.model';
 import { LineItem } from '@state/line-item/line-item.model';
 import { Order } from '@state/order/order.model';
@@ -34,18 +35,23 @@ export class OrderFormComponent implements OnChanges, OnDestroy {
   @Input() products: Product[];
   @Output() lineItemsChange = new EventEmitter<LineItem[]>();
   @Output() orderChange = new EventEmitter<Order>();
+  @Output() validationsChange = new EventEmitter<Map<AbstractControl, Validation>>();
 
   private destroyed$ = new Subject<void>();
+  private validations = new Map<AbstractControl, Validation>();
   private _customer: Customer;
   private _lineItems: LineItem[];
 
   @Input()
   set customer(customer: Customer) {
     this._customer = customer;
-    if (this.order && customer) {
-      this.order.customerId = customer.id;
+    if (!customer) {
+      return;
     }
-    this.orderChange.emit(this.order);
+    this.orderChange.emit({
+      ...this.order,
+      customerId: customer.id
+    });
   }
 
   get customer(): Customer {
@@ -77,6 +83,17 @@ export class OrderFormComponent implements OnChanges, OnDestroy {
     this.destroyed$.complete();
   }
 
+  onValidationChange([control, validation]: [AbstractControl, Validation]) {
+    this.validations.set(control, validation);
+    this.validationsChange.emit(this.validations);
+  }
+
+  onValidationDelete(control: AbstractControl) {
+    if (this.validations.has(control)) {
+      this.validations.delete(control);
+    }
+  }
+
   private buildForm() {
     this.formGroup = this.formBuilder.group({
       id: [0, Validators.required],
@@ -85,7 +102,6 @@ export class OrderFormComponent implements OnChanges, OnDestroy {
     });
 
     this.formGroup.valueChanges.pipe(takeUntil(this.destroyed$), skip(1), debounceTime(500)).subscribe(value => {
-      console.log('order changes:', value);
       if (!this.formGroup.valid) {
         return;
       }

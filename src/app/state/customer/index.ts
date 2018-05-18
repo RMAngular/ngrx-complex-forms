@@ -1,6 +1,6 @@
-import { createSelector, createFeatureSelector } from '@ngrx/store';
-import * as fromCustomers from './customer.reducer';
+import { createFeatureSelector, createSelector } from '@ngrx/store';
 import * as fromOrders from '../order';
+import * as fromCustomers from './customer.reducer';
 import { State as CustomersState } from './customer.reducer';
 
 export const getCustomersState = createFeatureSelector<CustomersState>(
@@ -29,8 +29,8 @@ export const getError = createSelector(
   fromCustomers.getError
 );
 
-export const getCustomerById = id =>
-  createSelector(getCustomerEntities, customers => customers[id]);
+// export const getCustomerById = id =>
+//   createSelector(getCustomerEntities, customers => customers[id]);
 
 export const getCustomerBySelectedOrder = createSelector(
   getCustomerEntities,

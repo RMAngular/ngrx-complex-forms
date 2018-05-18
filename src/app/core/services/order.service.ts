@@ -1,10 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Order } from '@state/order/order.model';
 import { Observable } from 'rxjs/Observable';
 import { of } from 'rxjs/observable/of';
 import { map, switchMap } from 'rxjs/operators';
-
-import { Order } from '@state/order/order.model';
 
 @Injectable()
 export class OrderService {
@@ -17,9 +16,7 @@ export class OrderService {
   }
 
   getOrder(id: number): Observable<Order> {
-    return this.getOrders().pipe(
-      map(orders => orders.find(order => order.id === id))
-    );
+    return this.getOrders().pipe(map(orders => orders.find(order => order.id === id)));
   }
 
   save(order: Order): Observable<Order> {
@@ -29,10 +26,8 @@ export class OrderService {
     return this.post(order);
   }
 
-  delete(order: Order): Observable<Order> {
-    const url = `${this.ordersUrl}/${order.id}`;
-
-    return this.httpClient.delete<void>(url).pipe(switchMap(() => of(order)));
+  delete(id: number): Observable<number> {
+    return this.httpClient.delete<void>(`${this.ordersUrl}/${id}`).pipe(switchMap(() => of(id)));
   }
 
   // Add new Order
@@ -44,8 +39,6 @@ export class OrderService {
 
   // Update existing Order
   private put(order: Order): Observable<Order> {
-    const url = `${this.ordersUrl}/${order.id}`;
-
-    return this.httpClient.put(url, order).pipe(switchMap(() => of(order)));
+    return this.httpClient.put<void>(`${this.ordersUrl}/${order.id}`, order).pipe(switchMap(() => of(order)));
   }
 }

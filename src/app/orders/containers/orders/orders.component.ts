@@ -1,27 +1,18 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Store, select } from '@ngrx/store';
-import { Dictionary } from '@ngrx/entity/src/models';
-import { Observable } from 'rxjs/Observable';
-import { of } from 'rxjs/observable/of';
-import { combineLatest, filter, withLatestFrom, map } from 'rxjs/operators';
-
 import { AppState } from '@state/app.interfaces';
-import * as fromStore from '@state/order';
 import * as fromCustomerStore from '@state/customer';
-import * as fromLineItemStore from '@state/line-item';
-import * as fromProductStore from '@state/product';
-import { LoadCustomers } from '@state/customer/customer.actions';
-import {
-  DeleteOrder,
-  LoadOrders,
-  SelectOrder,
-  LoadOrdersView
-} from '@state/order/order.actions';
 import { Customer } from '@state/customer/customer.model';
+import * as fromLineItemStore from '@state/line-item';
 import { LineItem } from '@state/line-item/line-item.model';
+import * as fromStore from '@state/order';
+import { ClearSelectedOrder, DeleteOrder, LoadOrdersView, SelectOrder } from '@state/order/order.actions';
 import { Order, OrderView } from '@state/order/order.model';
+import * as fromProductStore from '@state/product';
 import { Product } from '@state/product/product.model';
+import { Observable } from 'rxjs/Observable';
+import { combineLatest, filter, map } from 'rxjs/operators';
 
 @Component({
   templateUrl: './orders.component.html',
@@ -36,20 +27,13 @@ export class OrdersComponent implements OnInit {
     this.store.dispatch(new LoadOrdersView());
 
     const orders$ = this.store.pipe(select(fromStore.getAllOrders)),
-      customers$ = this.store.pipe(
-        select(fromCustomerStore.getCustomerEntities)
-      ),
-      lineItems$ = this.store.pipe(
-        select(fromLineItemStore.getLineItemEntities)
-      ),
+      customers$ = this.store.pipe(select(fromCustomerStore.getCustomerEntities)),
+      lineItems$ = this.store.pipe(select(fromLineItemStore.getLineItemEntities)),
       products$ = this.store.pipe(select(fromProductStore.getProductEntities));
 
     this.orders$ = orders$.pipe(
       combineLatest(customers$, lineItems$, products$),
-      filter(
-        ([orders, customers, lineItems, products]) =>
-          !!orders && !!customers && !!lineItems && !!products
-      ),
+      filter(([orders, customers, lineItems, products]) => !!orders && !!customers && !!lineItems && !!products),
       map(([orders, customers, lineItems, products]) => {
         return orders.map(order => {
           const c: Customer = customers[order.customerId],
@@ -74,6 +58,11 @@ export class OrdersComponent implements OnInit {
         });
       })
     );
+  }
+
+  onAddOrder() {
+    this.store.dispatch(new ClearSelectedOrder());
+    this.router.navigateByUrl('/orders/add');
   }
 
   onDeleteOrder(order: Order) {
