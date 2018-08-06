@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { Store, select } from '@ngrx/store';
 import { Update } from '@ngrx/entity';
 import { Observable } from 'rxjs/Observable';
@@ -24,10 +24,9 @@ export class ProductComponent implements OnInit {
 
   private product: Product;
   private valid: boolean;
-  private showErrors: boolean;
+  showErrors: boolean;
 
   constructor(
-    private router: Router,
     private store: Store<AppState>,
     private activatedRoute: ActivatedRoute
   ) { }
