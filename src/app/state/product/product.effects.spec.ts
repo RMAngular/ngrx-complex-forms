@@ -1,17 +1,13 @@
-import { TestBed, inject } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { Actions } from '@ngrx/effects';
-import { provideMockActions } from '@ngrx/effects/testing';
-import { Observable } from 'rxjs/Observable';
-
-import { cold, hot } from 'jasmine-marbles';
-import { empty } from 'rxjs/observable/empty';
+import { Observable, EMPTY } from 'rxjs';
 
 import { ProductEffects } from './product.effects';
 import { ProductService } from '@core/services/product.service';
 
 export class TestActions extends Actions {
   constructor() {
-    super(empty());
+    super(EMPTY);
   }
 
   set stream(source: Observable<any>) {

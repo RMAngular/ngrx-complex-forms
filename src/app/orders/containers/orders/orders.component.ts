@@ -11,8 +11,8 @@ import { ClearSelectedOrder, DeleteOrder, LoadOrdersView, SelectOrder } from '@s
 import { Order, OrderView } from '@state/order/order.model';
 import * as fromProductStore from '@state/product';
 import { Product } from '@state/product/product.model';
-import { Observable } from 'rxjs';
-import { combineLatest, filter, map } from 'rxjs/operators';
+import { Observable, combineLatest } from 'rxjs';
+import { filter, map } from 'rxjs/operators';
 
 @Component({
   templateUrl: './orders.component.html',
@@ -26,13 +26,12 @@ export class OrdersComponent implements OnInit {
   ngOnInit() {
     this.store.dispatch(new LoadOrdersView());
 
-    const orders$ = this.store.pipe(select(fromStore.getAllOrders)),
-      customers$ = this.store.pipe(select(fromCustomerStore.getCustomerEntities)),
-      lineItems$ = this.store.pipe(select(fromLineItemStore.getLineItemEntities)),
-      products$ = this.store.pipe(select(fromProductStore.getProductEntities));
-
-    this.orders$ = orders$.pipe(
-      combineLatest(customers$, lineItems$, products$),
+    this.orders$ = combineLatest(
+      this.store.pipe(select(fromStore.getAllOrders)),
+      this.store.pipe(select(fromCustomerStore.getCustomerEntities)),
+      this.store.pipe(select(fromLineItemStore.getLineItemEntities)),
+      this.store.pipe(select(fromProductStore.getProductEntities))
+    ).pipe(
       filter(([orders, customers, lineItems, products]) => !!orders && !!customers && !!lineItems && !!products),
       map(([orders, customers, lineItems, products]) => {
         return orders.map(order => {

@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { map, switchMap } from 'rxjs/operators';
 
 import { Customer } from '@state/customer/customer.model';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 
 @Injectable()
 export class CustomerService {
