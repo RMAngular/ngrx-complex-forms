@@ -5,9 +5,7 @@ import { Action, Store } from '@ngrx/store';
 import { AppState } from '@state/app.interfaces';
 import { DeleteLineItem, DeleteLineItemFail, DeleteLineItemSuccess } from '@state/line-item/line-item.actions';
 import { UpdateOrder } from '@state/order/order.actions';
-import { Observable } from 'rxjs/Observable';
-import { forkJoin } from 'rxjs/observable/forkJoin';
-import { of } from 'rxjs/observable/of';
+import { Observable , forkJoin , of } from 'rxjs';
 import { catchError, exhaustMap, map, mergeMap } from 'rxjs/operators';
 import {
   LineItemActionTypes,

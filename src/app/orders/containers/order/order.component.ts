@@ -17,8 +17,7 @@ import * as fromProductStore from '@state/product';
 import { LoadProducts } from '@state/product/product.actions';
 import { Product } from '@state/product/product.model';
 import { clone } from 'ramda';
-import { Observable } from 'rxjs/Observable';
-import { Subject } from 'rxjs/Subject';
+import { Observable , Subject } from 'rxjs';
 import { filter, map, switchMap, tap } from 'rxjs/operators';
 
 @Component({

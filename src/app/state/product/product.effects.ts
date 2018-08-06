@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Actions, Effect } from '@ngrx/effects';
 import { Action, Store, select } from '@ngrx/store';
-import { Observable } from 'rxjs/Observable';
+import { Observable , of } from 'rxjs';
 import {
   map,
   switchMap,
@@ -10,7 +10,6 @@ import {
   withLatestFrom,
   tap
 } from 'rxjs/operators';
-import { of } from 'rxjs/observable/of';
 
 import { Product } from './product.model';
 import {

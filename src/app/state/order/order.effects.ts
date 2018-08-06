@@ -8,8 +8,7 @@ import { AppState } from '@state/app.interfaces';
 import { LoadCustomers } from '@state/customer/customer.actions';
 import { DeleteLineItem, LoadLineItems, UpsertLineItems } from '@state/line-item/line-item.actions';
 import { LoadProducts } from '@state/product/product.actions';
-import { Observable } from 'rxjs/Observable';
-import { of } from 'rxjs/observable/of';
+import { Observable , of } from 'rxjs';
 import { catchError, exhaustMap, filter, map, mergeMap, switchMap, tap } from 'rxjs/operators';
 import {
   AddOrder,

@@ -1,8 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { LineItem } from '@state/line-item/line-item.model';
-import { Observable } from 'rxjs/Observable';
-import { of } from 'rxjs/observable/of';
+import { Observable , of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 
 @Injectable()

@@ -2,8 +2,7 @@ import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output } 
 import { AbstractControl, FormControl, Validators } from '@angular/forms';
 import { Validation } from '@core/interfaces/validation';
 import { Customer } from '@state/customer/customer.model';
-import { Observable } from 'rxjs/Observable';
-import { Subject } from 'rxjs/Subject';
+import { Observable , Subject } from 'rxjs';
 import { debounceTime, map, takeUntil } from 'rxjs/operators';
 
 @Component({

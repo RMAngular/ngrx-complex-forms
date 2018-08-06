@@ -1,5 +1,5 @@
 import { FormControl } from '@angular/forms';
-import { of } from 'rxjs/observable/of';
+import { of } from 'rxjs';
 
 export class AppValidators {
   static validateCurrency(formControl: FormControl) {

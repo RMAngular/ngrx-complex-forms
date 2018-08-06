@@ -1,10 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
-import { of } from 'rxjs/observable/of';
 import { map, switchMap } from 'rxjs/operators';
 
 import { Customer } from '@state/customer/customer.model';
+import { Observable } from 'rxjs';
 
 @Injectable()
 export class CustomerService {

@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, OnChanges, OnDestroy, Output, SimpleCha
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AppValidators } from '@core/validators/app.validator';
 import { Product } from '@state/product/product.model';
-import { Subject } from 'rxjs/Subject';
+import { Subject } from 'rxjs';
 import { debounceTime, skip, takeUntil } from 'rxjs/operators';
 
 @Component({
